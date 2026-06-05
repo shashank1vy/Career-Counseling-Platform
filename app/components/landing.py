@@ -634,7 +634,23 @@ def landing() -> rx.Component:
                             "Pathwise Academy • Career Counselling Studio",
                             class_name="text-xs font-bold text-slate-800 ml-1.5 tracking-wide",
                         ),
-                        class_name="inline-flex items-center bg-white/80 border border-indigo-100/80 px-3.5 py-1.5 rounded-full mb-6 shadow-sm",
+                        class_name="inline-flex items-center bg-white/80 border border-indigo-100/80 px-3.5 py-1.5 rounded-full mb-4 shadow-sm",
+                    ),
+                    # Featured Highlight Offer Banner
+                    rx.el.div(
+                        rx.icon(
+                            "sparkles",
+                            class_name="h-4 w-4 text-indigo-900 animate-pulse-gentle shrink-0",
+                        ),
+                        rx.el.span(
+                            "Limited Time Offer:",
+                            class_name="text-[11px] font-extrabold uppercase tracking-wider text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded mr-2",
+                        ),
+                        rx.el.span(
+                            "Free 30 mins Discovery Session with Industry Expert",
+                            class_name="text-xs font-semibold text-slate-800",
+                        ),
+                        class_name="inline-flex items-center bg-gradient-to-r from-amber-50 to-indigo-50 border border-indigo-200 px-4 py-2 rounded-2xl mb-6 shadow-sm animate-fade-in-up",
                     ),
                     rx.el.h1(
                         "Learn the path. ",
@@ -647,6 +663,18 @@ def landing() -> rx.Component:
                     rx.el.p(
                         "A scholarly, mentor-led approach to career guidance. We pair you with vetted counsellors and a structured curriculum so you don't just plan a career — you build the discipline to thrive in it.",
                         class_name="text-sm sm:text-base text-slate-600 mt-6 max-w-2xl mx-auto leading-relaxed",
+                    ),
+                    # Highlighting the same offer next to calls-to-action
+                    rx.el.div(
+                        rx.el.p(
+                            rx.icon(
+                                "gift",
+                                class_name="h-3.5 w-3.5 text-emerald-600 mr-1.5 inline",
+                            ),
+                            "Includes Free 30 mins Discovery Session with Industry Expert",
+                            class_name="text-[11px] font-bold text-emerald-800 bg-emerald-50/70 border border-emerald-200/50 px-3 py-1 rounded-full w-fit mx-auto",
+                        ),
+                        class_name="mt-6 flex justify-center",
                     ),
                     rx.el.div(
                         rx.el.button(
@@ -664,7 +692,7 @@ def landing() -> rx.Component:
                             on_click=AppState.go_to_login,
                             class_name="flex items-center text-slate-700 px-6 py-3 rounded-xl hover:bg-slate-50 transition-all font-semibold border border-slate-200/80 bg-white",
                         ),
-                        class_name="flex flex-col sm:flex-row gap-3 justify-center mt-8",
+                        class_name="flex flex-col sm:flex-row gap-3 justify-center mt-4",
                     ),
                     rx.cond(
                         AppState.has_saved_account,
@@ -736,13 +764,13 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "Counselling tracks designed for where you are.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "Each track has its own curriculum, mentor matching rules, and outcome milestones — so you get guidance that fits your reality.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-12",
                 ),
                 rx.el.div(
                     audience_card(
@@ -840,7 +868,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-white border-b border-slate-200/60",
         ),
         # Explore career paths (richer educational treatment)
         rx.el.section(
@@ -852,7 +880,7 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "Explore the paths our counsellors specialize in.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "Each path is a structured learning track — mapped to live market demand, validated by domain mentors, and refreshed every quarter.",
@@ -875,7 +903,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-slate-50/50 border-y border-slate-200/40",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-slate-50/70 border-b border-slate-200/60",
         ),
         # How it works (curriculum-styled)
         rx.el.section(
@@ -887,13 +915,13 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "A simple, structured path to clarity.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "Seven cohesive milestones — an academic, step-by-step career readiness journey designed by educators and domain experts.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-12",
                 ),
                 rx.el.div(
                     feature_card(
@@ -950,7 +978,7 @@ def landing() -> rx.Component:
                 class_name="max-w-6xl mx-auto",
                 id="how",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-white border-b border-slate-200/60",
         ),
         # Learning outcomes
         rx.el.section(
@@ -963,7 +991,7 @@ def landing() -> rx.Component:
                         ),
                         rx.el.h2(
                             "Learning outcomes from every counselling track.",
-                            class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                            class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                         ),
                         rx.el.p(
                             "Pathwise sessions are educational by design. You leave each track with tangible artifacts, frameworks, and a sharpened sense of direction — not just a chat.",
@@ -1011,7 +1039,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-gradient-to-b from-white to-indigo-50/30 border-y border-slate-200/40",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-slate-50/70 border-b border-slate-200/60",
         ),
         # Mentor faculty
         rx.el.section(
@@ -1023,13 +1051,13 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "Counsellors who've actually built the careers you're aiming for.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "Every Pathwise mentor is vetted on real industry experience, teaching ability, and a track record of helping people level up.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-12",
                 ),
                 rx.el.div(
                     rx.foreach(MENTORS, mentor_card),
@@ -1037,7 +1065,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-white border-b border-slate-200/60",
         ),
         # Why Choose Pathwise
         rx.el.section(
@@ -1049,13 +1077,13 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "An academy-grade approach to career guidance.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "Frameworks instead of feelings. Practice instead of platitudes. Outcomes you can point to.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-12",
                 ),
                 rx.el.div(
                     benefit_card(
@@ -1086,7 +1114,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-slate-50/50 border-y border-slate-200/40",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-slate-50/70 border-b border-slate-200/60",
         ),
         # Testimonials
         rx.el.section(
@@ -1098,13 +1126,13 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "Careers, reshaped — in their own words.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "A glimpse of what people walk away with after just a few counselling sessions.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-12",
                 ),
                 rx.el.div(
                     rx.foreach(TESTIMONIALS, testimonial_card),
@@ -1112,7 +1140,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-white border-b border-slate-200/60",
         ),
         # FAQ Section
         rx.el.section(
@@ -1124,13 +1152,13 @@ def landing() -> rx.Component:
                     ),
                     rx.el.h2(
                         "Frequently asked questions.",
-                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        class_name="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight",
                     ),
                     rx.el.p(
                         "Everything you need to know about our personal career counselling sessions.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-12",
                 ),
                 rx.el.div(
                     faq_item(
@@ -1161,7 +1189,7 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-slate-50/50 border-y border-slate-200/40",
+            class_name="px-4 sm:px-6 lg:px-8 py-16 bg-slate-50/70 border-b border-slate-200/60",
         ),
         # Final CTA
         rx.el.section(
