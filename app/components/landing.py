@@ -16,6 +16,85 @@ def feature_card(icon: str, title: str, desc: str) -> rx.Component:
     )
 
 
+def benefit_card(
+    icon: str, title: str, desc: str, color_theme: str
+) -> rx.Component:
+    theme_styles = rx.match(
+        color_theme,
+        (
+            "sage",
+            "bg-emerald-50/40 border-emerald-100 text-emerald-800 hover:border-emerald-300 icon-text-emerald-600 icon-bg-emerald-50",
+        ),
+        (
+            "amber",
+            "bg-amber-50/40 border-amber-100 text-amber-800 hover:border-amber-300 icon-text-amber-600 icon-bg-amber-50",
+        ),
+        (
+            "rose",
+            "bg-rose-50/40 border-rose-100 text-rose-800 hover:border-rose-300 icon-text-rose-600 icon-bg-rose-50",
+        ),
+        "bg-blue-50/40 border-blue-100 text-blue-800 hover:border-blue-300 icon-text-blue-600 icon-bg-blue-50",
+    )
+    return rx.el.div(
+        rx.el.div(
+            rx.icon(
+                icon,
+                class_name=rx.match(
+                    color_theme,
+                    ("sage", "h-5 w-5 text-emerald-600"),
+                    ("amber", "h-5 w-5 text-amber-600"),
+                    ("rose", "h-5 w-5 text-rose-600"),
+                    "h-5 w-5 text-blue-600",
+                ),
+            ),
+            class_name=rx.match(
+                color_theme,
+                (
+                    "sage",
+                    "h-10 w-10 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4 border border-emerald-100/50",
+                ),
+                (
+                    "amber",
+                    "h-10 w-10 rounded-2xl bg-amber-50 flex items-center justify-center mb-4 border border-amber-100/50",
+                ),
+                (
+                    "rose",
+                    "h-10 w-10 rounded-2xl bg-rose-50 flex items-center justify-center mb-4 border border-rose-100/50",
+                ),
+                "h-10 w-10 rounded-2xl bg-blue-50 flex items-center justify-center mb-4 border border-blue-100/50",
+            ),
+        ),
+        rx.el.h3(
+            title, class_name="text-base font-semibold text-stone-900 mb-2"
+        ),
+        rx.el.p(desc, class_name="text-xs text-stone-600 leading-relaxed"),
+        class_name=rx.cond(
+            color_theme == "sage",
+            "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-emerald-350 hover:shadow-sm transition-all duration-300",
+            rx.cond(
+                color_theme == "amber",
+                "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-amber-350 hover:shadow-sm transition-all duration-300",
+                rx.cond(
+                    color_theme == "rose",
+                    "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-rose-350 hover:shadow-sm transition-all duration-300",
+                    "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-blue-350 hover:shadow-sm transition-all duration-300",
+                ),
+            ),
+        ),
+    )
+
+
+def faq_item(question: str, answer: str) -> rx.Component:
+    return rx.el.div(
+        rx.el.h4(
+            question,
+            class_name="text-sm font-bold text-stone-900 mb-2 flex items-center gap-2",
+        ),
+        rx.el.p(answer, class_name="text-xs text-stone-600 leading-relaxed"),
+        class_name="p-5 bg-stone-50/50 border border-stone-200/50 rounded-2xl hover:border-stone-300 transition-colors",
+    )
+
+
 def audience_card(
     icon: str, title: str, desc: str, badge: str, stage: str
 ) -> rx.Component:
@@ -279,6 +358,88 @@ def landing() -> rx.Component:
                 id="how",
             ),
             class_name="px-4 sm:px-6 lg:px-8 py-12 bg-stone-50/40 border-y border-stone-200/60",
+        ),
+        # Why Choose Pathwise (Extracted core value propositions)
+        rx.el.section(
+            rx.el.div(
+                rx.el.div(
+                    rx.el.h2(
+                        "Why choose Pathwise?",
+                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                    ),
+                    rx.el.p(
+                        "A framework-driven approach designed to turn uncertainty into career progression.",
+                        class_name="text-sm text-stone-600 mt-2",
+                    ),
+                    class_name="text-center mb-10",
+                ),
+                rx.el.div(
+                    benefit_card(
+                        "route",
+                        "Actionable Roadmap",
+                        "Walk away from every session with a clear, step-by-step PDF roadmap outlining exact skills to acquire and roles to target.",
+                        "blue",
+                    ),
+                    benefit_card(
+                        "search-code",
+                        "ATS-Ready Portfolios",
+                        "Our optimization process ensures your resume, GitHub, or portfolio passes applicant tracking systems with flying colors.",
+                        "sage",
+                    ),
+                    benefit_card(
+                        "award",
+                        "Domain-Specific Coaches",
+                        "Get matched with mentors who have actually worked at companies like Google, Microsoft, and high-growth scale-ups.",
+                        "amber",
+                    ),
+                    benefit_card(
+                        "messages-square",
+                        "Unlimited Practice",
+                        "Unlock realistic mock interviews tailored to your exact target tier, complete with detailed rubric-based grading.",
+                        "rose",
+                    ),
+                    class_name="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
+                ),
+                class_name="max-w-6xl mx-auto",
+            ),
+            class_name="px-4 sm:px-6 lg:px-8 py-12 bg-white border-b border-stone-200/50",
+        ),
+        # FAQ Section (Extracted content context on privacy, sessions, matching)
+        rx.el.section(
+            rx.el.div(
+                rx.el.div(
+                    rx.el.h2(
+                        "Frequently Asked Questions",
+                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                    ),
+                    rx.el.p(
+                        "Everything you need to know about our personal career counselling sessions.",
+                        class_name="text-sm text-stone-600 mt-2",
+                    ),
+                    class_name="text-center mb-10",
+                ),
+                rx.el.div(
+                    faq_item(
+                        "How does the match system work?",
+                        "We automatically match you with a specialized career coach based on your selected career stage, field of study, and target roles during intake.",
+                    ),
+                    faq_item(
+                        "Is my resume required for booking?",
+                        "No! Resume upload is completely optional. If you don't have one ready, your counsellor will help you outline one from scratch during your session.",
+                    ),
+                    faq_item(
+                        "Where is my private data stored?",
+                        "If cloud sync is inactive, all registration, intake, and booking selections are saved completely on your private browser session. No data is sent to external servers.",
+                    ),
+                    faq_item(
+                        "Can I reschedule after booking?",
+                        "Absolutely. Your confirmation email will include a reschedule link. You can change your slot up to 12 hours in advance at no extra cost.",
+                    ),
+                    class_name="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto",
+                ),
+                class_name="max-w-6xl mx-auto",
+            ),
+            class_name="px-4 sm:px-6 lg:px-8 py-12 bg-stone-50/30 border-b border-stone-200/50",
         ),
         # CTA
         rx.el.section(
