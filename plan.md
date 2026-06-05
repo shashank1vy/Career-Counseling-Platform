@@ -1,16 +1,16 @@
-# Balanced Color Refresh Plan
+# Education-Oriented Visual Refresh Plan
 
-## Phase 1: Color Direction and Shared Styling ✅
-- [x] Establish a tasteful multi-accent palette using muted blue, sage, amber, and rose accents without creating a rainbow effect.
-- [x] Apply richer gradients, soft tinted surfaces, colored icon containers, and improved visual hierarchy across shared navigation, footer, and status messaging.
-- [x] Preserve the current low-contrast, modern, accessible style with readable text, calm spacing, and gentle borders.
+## Phase 1: Educational Brand Direction and Shared Layout ✅
+- [x] Establish a more appealing education-focused visual direction with scholarly but modern colors, richer hero depth, calm academic accents, and warm trust-building surfaces.
+- [x] Refresh shared navigation, footer, status messaging, and global page atmosphere so the app feels like a premium learning and counselling platform.
+- [x] Preserve readability, accessibility, responsive spacing, and all existing user flow behavior.
 
-## Phase 2: Page-Level Color Enhancement ✅
-- [x] Refresh the landing page with more engaging but restrained hero accents, audience cards, feature cards, stats, and calls to action.
-- [x] Add tasteful color accents to signup, login, intake, review, booking, and confirmation screens while keeping forms calm and readable.
-- [x] Improve success, warning, selected, and empty states with consistent tinted backgrounds and non-harsh colors.
+## Phase 2: Homepage Education Storytelling ✅
+- [x] Redesign the homepage presentation to feel more education-oriented with stronger career guidance messaging, mentor/course-style sections, learning outcomes, and trust signals.
+- [x] Improve the career paths section with more engaging educational cards, trend badges, in-demand skills, and clearer guidance value.
+- [x] Add richer but cohesive visual hierarchy using academic-style accents, soft illustrations or icon treatments, and non-rainbow color balance.
 
-## Phase 3: Interaction and Consistency Polish ✅
-- [x] Refine hover, focus, selected, active, and disabled states with subtle color depth rather than high contrast.
-- [x] Ensure the new color accents remain consistent across mobile and desktop layouts.
-- [x] Keep all existing signup, login, intake, review, booking, persistence, and fallback behavior unchanged.
+## Phase 3: Journey Screens and Interaction Polish ✅
+- [x] Refresh registration, login, intake, review, booking, and confirmation screens with more educational counselling cues while keeping forms calm and professional.
+- [x] Improve hover, focus, selected, success, warning, and empty states with polished depth and consistent academic-themed accents.
+- [x] Keep all signup, login, intake, review, booking, persistence, and fallback behavior unchanged.

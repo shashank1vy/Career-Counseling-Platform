@@ -17,7 +17,7 @@ def index() -> rx.Component:
         rx.el.div(
             rx.el.div(
                 storage_status_banner(),
-                class_name="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6",
+                class_name="max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6",
             ),
             rx.match(
                 AppState.current_step,
@@ -33,7 +33,7 @@ def index() -> rx.Component:
             class_name="flex-1",
         ),
         footer(),
-        class_name="font-['Inter'] bg-stone-50/80 min-h-screen flex flex-col text-stone-800 antialiased selection:bg-blue-100/80",
+        class_name="font-['Inter'] bg-slate-50/70 min-h-screen flex flex-col text-slate-800 antialiased selection:bg-indigo-100/80",
     )
 
 

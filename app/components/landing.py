@@ -2,194 +2,307 @@ import reflex as rx
 from app.states.app_state import AppState
 
 
-def feature_card(icon: str, title: str, desc: str) -> rx.Component:
+def feature_card(
+    icon: str, title: str, desc: str, step_num: str = ""
+) -> rx.Component:
     return rx.el.div(
         rx.el.div(
-            rx.icon(icon, class_name="h-5 w-5 text-rose-600"),
-            class_name="h-10 w-10 rounded-2xl bg-rose-50 flex items-center justify-center mb-4 border border-rose-100",
+            rx.el.div(
+                rx.icon(icon, class_name="h-5 w-5 text-indigo-900"),
+                class_name="h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100/80",
+            ),
+            rx.cond(
+                step_num != "",
+                rx.el.span(
+                    step_num,
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-indigo-700 bg-indigo-50/60 border border-indigo-100 px-2.5 py-1 rounded-full",
+                ),
+                rx.fragment(),
+            ),
+            class_name="flex items-center justify-between mb-4",
         ),
         rx.el.h3(
-            title, class_name="text-base font-semibold text-stone-900 mb-2"
+            title, class_name="text-base font-semibold text-slate-900 mb-2"
         ),
-        rx.el.p(desc, class_name="text-xs text-stone-600 leading-relaxed"),
-        class_name="bg-gradient-to-b from-white to-stone-50/50 rounded-2xl border border-stone-200/60 p-6 hover:border-rose-200 hover:shadow-md transition-all duration-300",
+        rx.el.p(desc, class_name="text-xs text-slate-600 leading-relaxed"),
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-200 hover:shadow-sm transition-all duration-300",
     )
 
 
 def benefit_card(
     icon: str, title: str, desc: str, color_theme: str
 ) -> rx.Component:
-    theme_styles = rx.match(
-        color_theme,
-        (
-            "sage",
-            "bg-emerald-50/40 border-emerald-100 text-emerald-800 hover:border-emerald-300 icon-text-emerald-600 icon-bg-emerald-50",
-        ),
-        (
-            "amber",
-            "bg-amber-50/40 border-amber-100 text-amber-800 hover:border-amber-300 icon-text-amber-600 icon-bg-amber-50",
-        ),
-        (
-            "rose",
-            "bg-rose-50/40 border-rose-100 text-rose-800 hover:border-rose-300 icon-text-rose-600 icon-bg-rose-50",
-        ),
-        "bg-blue-50/40 border-blue-100 text-blue-800 hover:border-blue-300 icon-text-blue-600 icon-bg-blue-50",
-    )
     return rx.el.div(
         rx.el.div(
             rx.icon(
                 icon,
                 class_name=rx.match(
                     color_theme,
-                    ("sage", "h-5 w-5 text-emerald-600"),
-                    ("amber", "h-5 w-5 text-amber-600"),
-                    ("rose", "h-5 w-5 text-rose-600"),
-                    "h-5 w-5 text-blue-600",
+                    ("sage", "h-5 w-5 text-emerald-700"),
+                    ("amber", "h-5 w-5 text-amber-700"),
+                    ("rose", "h-5 w-5 text-rose-700"),
+                    "h-5 w-5 text-indigo-900",
                 ),
             ),
             class_name=rx.match(
                 color_theme,
                 (
                     "sage",
-                    "h-10 w-10 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4 border border-emerald-100/50",
+                    "h-11 w-11 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4 border border-emerald-100",
                 ),
                 (
                     "amber",
-                    "h-10 w-10 rounded-2xl bg-amber-50 flex items-center justify-center mb-4 border border-amber-100/50",
+                    "h-11 w-11 rounded-2xl bg-amber-50 flex items-center justify-center mb-4 border border-amber-100",
                 ),
                 (
                     "rose",
-                    "h-10 w-10 rounded-2xl bg-rose-50 flex items-center justify-center mb-4 border border-rose-100/50",
+                    "h-11 w-11 rounded-2xl bg-rose-50 flex items-center justify-center mb-4 border border-rose-100",
                 ),
-                "h-10 w-10 rounded-2xl bg-blue-50 flex items-center justify-center mb-4 border border-blue-100/50",
+                "h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center mb-4 border border-indigo-100",
             ),
         ),
         rx.el.h3(
-            title, class_name="text-base font-semibold text-stone-900 mb-2"
+            title, class_name="text-base font-semibold text-slate-900 mb-2"
         ),
-        rx.el.p(desc, class_name="text-xs text-stone-600 leading-relaxed"),
-        class_name=rx.cond(
-            color_theme == "sage",
-            "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-emerald-350 hover:shadow-sm transition-all duration-300",
-            rx.cond(
-                color_theme == "amber",
-                "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-amber-350 hover:shadow-sm transition-all duration-300",
-                rx.cond(
-                    color_theme == "rose",
-                    "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-rose-350 hover:shadow-sm transition-all duration-300",
-                    "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-blue-350 hover:shadow-sm transition-all duration-300",
+        rx.el.p(desc, class_name="text-xs text-slate-600 leading-relaxed"),
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-200 hover:shadow-sm transition-all duration-300 h-full",
+    )
+
+
+def outcome_item(icon: str, text: str) -> rx.Component:
+    return rx.el.li(
+        rx.el.div(
+            rx.icon(icon, class_name="h-4 w-4 text-emerald-700"),
+            class_name="h-8 w-8 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0",
+        ),
+        rx.el.span(
+            text,
+            class_name="text-sm text-slate-700 ml-3 leading-relaxed font-medium",
+        ),
+        class_name="flex items-start py-2.5",
+    )
+
+
+def mentor_card(mentor: dict[str, str]) -> rx.Component:
+    return rx.el.div(
+        rx.el.div(
+            rx.image(
+                src=f"https://api.dicebear.com/9.x/notionists/svg?seed={mentor['seed']}",
+                class_name="h-14 w-14 rounded-full bg-indigo-50 border border-indigo-100",
+            ),
+            rx.el.div(
+                rx.icon(
+                    "badge-check", class_name="h-3.5 w-3.5 text-indigo-900"
+                ),
+                class_name="h-6 w-6 rounded-full bg-white border border-indigo-100 flex items-center justify-center -ml-3 mt-9 shadow-sm",
+            ),
+            class_name="flex items-end mb-4",
+        ),
+        rx.el.h4(
+            mentor["name"],
+            class_name="text-sm font-bold text-slate-900",
+        ),
+        rx.el.p(
+            mentor["title"],
+            class_name="text-xs text-slate-600 mt-0.5",
+        ),
+        rx.el.div(
+            rx.foreach(
+                mentor["expertise"].split(","),
+                lambda s: rx.el.span(
+                    s.strip(),
+                    class_name="text-[10px] font-semibold text-indigo-800 bg-indigo-50 border border-indigo-100/80 px-2 py-0.5 rounded-full",
                 ),
             ),
+            class_name="flex flex-wrap gap-1 mt-3",
         ),
+        rx.el.div(
+            rx.icon("star", class_name="h-3.5 w-3.5 text-amber-600"),
+            rx.el.span(
+                mentor["rating"],
+                class_name="text-xs font-bold text-slate-800 ml-1",
+            ),
+            rx.el.span(
+                f" • {mentor['sessions']} sessions",
+                class_name="text-xs text-slate-500 ml-1",
+            ),
+            class_name="flex items-center mt-3 pt-3 border-t border-slate-100",
+        ),
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-5 hover:border-indigo-200 hover:shadow-sm transition-all duration-300",
+    )
+
+
+def testimonial_card(t: dict[str, str]) -> rx.Component:
+    return rx.el.div(
+        rx.el.div(
+            rx.icon("quote", class_name="h-5 w-5 text-indigo-300"),
+            class_name="mb-3",
+        ),
+        rx.el.p(
+            t["quote"],
+            class_name="text-sm text-slate-700 leading-relaxed italic",
+        ),
+        rx.el.div(
+            rx.image(
+                src=f"https://api.dicebear.com/9.x/notionists/svg?seed={t['seed']}",
+                class_name="h-9 w-9 rounded-full bg-indigo-50 border border-indigo-100",
+            ),
+            rx.el.div(
+                rx.el.p(
+                    t["name"],
+                    class_name="text-xs font-bold text-slate-900",
+                ),
+                rx.el.p(
+                    t["role"],
+                    class_name="text-[11px] text-slate-500 mt-0.5",
+                ),
+                class_name="ml-3",
+            ),
+            class_name="flex items-center mt-5 pt-5 border-t border-slate-100",
+        ),
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-200 hover:shadow-sm transition-all duration-300",
     )
 
 
 def faq_item(question: str, answer: str) -> rx.Component:
     return rx.el.div(
-        rx.el.h4(
-            question,
-            class_name="text-sm font-bold text-stone-900 mb-2 flex items-center gap-2",
+        rx.el.div(
+            rx.icon(
+                "circle-help",
+                class_name="h-4 w-4 text-indigo-900 shrink-0 mt-0.5",
+            ),
+            rx.el.h4(
+                question,
+                class_name="text-sm font-bold text-slate-900 ml-2",
+            ),
+            class_name="flex items-start mb-2",
         ),
-        rx.el.p(answer, class_name="text-xs text-stone-600 leading-relaxed"),
-        class_name="p-5 bg-stone-50/50 border border-stone-200/50 rounded-2xl hover:border-stone-300 transition-colors",
+        rx.el.p(
+            answer,
+            class_name="text-xs text-slate-600 leading-relaxed ml-6",
+        ),
+        class_name="p-5 bg-white border border-slate-200/60 rounded-2xl hover:border-indigo-200 hover:shadow-sm transition-all",
     )
 
 
 def audience_card(
-    icon: str, title: str, desc: str, badge: str, stage: str
+    icon: str,
+    title: str,
+    desc: str,
+    badge: str,
+    stage: str,
+    curriculum: list[str],
 ) -> rx.Component:
-    color_classes = rx.match(
-        stage,
-        (
-            "fresher",
-            "border-emerald-100 bg-emerald-50/30 text-emerald-700 icon-bg-emerald-50 icon-emerald-600 hover-border-emerald-300",
-        ),
-        (
-            "early_career",
-            "border-blue-100 bg-blue-50/30 text-blue-700 icon-bg-blue-50 icon-blue-600 hover-border-blue-300",
-        ),
-        (
-            "switcher",
-            "border-amber-100 bg-amber-50/30 text-amber-700 icon-bg-amber-50 icon-amber-600 hover-border-amber-300",
-        ),
-        "border-stone-100 bg-stone-50/30 text-stone-700 icon-bg-stone-100 icon-stone-600 hover-border-stone-300",
-    )
     return rx.el.div(
         rx.el.div(
             rx.el.div(
                 rx.icon(
                     icon,
-                    class_name=rx.cond(
-                        stage == "fresher",
-                        "h-5 w-5 text-emerald-600",
-                        rx.cond(
-                            stage == "early_career",
-                            "h-5 w-5 text-blue-600",
-                            "h-5 w-5 text-amber-600",
-                        ),
+                    class_name=rx.match(
+                        stage,
+                        ("fresher", "h-5 w-5 text-emerald-700"),
+                        ("early_career", "h-5 w-5 text-indigo-900"),
+                        "h-5 w-5 text-amber-700",
                     ),
                 ),
-                class_name=rx.cond(
-                    stage == "fresher",
-                    "h-9 w-9 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100",
-                    rx.cond(
-                        stage == "early_career",
-                        "h-9 w-9 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100",
-                        "h-9 w-9 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100",
+                class_name=rx.match(
+                    stage,
+                    (
+                        "fresher",
+                        "h-11 w-11 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100",
                     ),
+                    (
+                        "early_career",
+                        "h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100",
+                    ),
+                    "h-11 w-11 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100",
                 ),
             ),
             rx.el.span(
                 badge,
-                class_name=rx.cond(
-                    stage == "fresher",
-                    "text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-100/80 px-2.5 py-1 rounded-full w-fit",
-                    rx.cond(
-                        stage == "early_career",
-                        "text-[11px] font-semibold text-blue-800 bg-blue-50 border border-blue-100/80 px-2.5 py-1 rounded-full w-fit",
-                        "text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-100/80 px-2.5 py-1 rounded-full w-fit",
+                class_name=rx.match(
+                    stage,
+                    (
+                        "fresher",
+                        "text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-100/80 px-2.5 py-1 rounded-full w-fit",
                     ),
+                    (
+                        "early_career",
+                        "text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-100/80 px-2.5 py-1 rounded-full w-fit",
+                    ),
+                    "text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-100/80 px-2.5 py-1 rounded-full w-fit",
                 ),
             ),
             class_name="flex items-center justify-between mb-4",
         ),
         rx.el.h3(
-            title, class_name="text-base font-semibold text-stone-900 mb-2"
+            title, class_name="text-base font-semibold text-slate-900 mb-2"
         ),
-        rx.el.p(desc, class_name="text-xs text-stone-600 leading-relaxed mb-5"),
-        rx.el.button(
-            "Get started",
-            rx.icon(
-                "arrow-right",
-                class_name=rx.cond(
-                    stage == "fresher",
-                    "h-3.5 w-3.5 ml-1.5 text-emerald-700",
-                    rx.cond(
-                        stage == "early_career",
-                        "h-3.5 w-3.5 ml-1.5 text-blue-700",
-                        "h-3.5 w-3.5 ml-1.5 text-amber-700",
+        rx.el.p(desc, class_name="text-xs text-slate-600 leading-relaxed mb-4"),
+        rx.el.div(
+            rx.el.p(
+                "Curriculum highlights",
+                class_name="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2",
+            ),
+            rx.el.ul(
+                rx.foreach(
+                    curriculum,
+                    lambda c: rx.el.li(
+                        rx.icon(
+                            "check",
+                            class_name=rx.match(
+                                stage,
+                                ("fresher", "h-3.5 w-3.5 text-emerald-700"),
+                                ("early_career", "h-3.5 w-3.5 text-indigo-900"),
+                                "h-3.5 w-3.5 text-amber-700",
+                            ),
+                        ),
+                        rx.el.span(
+                            c,
+                            class_name="text-xs text-slate-700 ml-2 font-medium",
+                        ),
+                        class_name="flex items-center py-1",
                     ),
                 ),
             ),
-            on_click=lambda: AppState.go_to_register(stage),
-            class_name=rx.cond(
-                stage == "fresher",
-                "flex items-center text-xs font-semibold text-emerald-700 hover:text-emerald-800 transition-colors",
-                rx.cond(
-                    stage == "early_career",
-                    "flex items-center text-xs font-semibold text-blue-700 hover:text-blue-800 transition-colors",
-                    "flex items-center text-xs font-semibold text-amber-700 hover:text-amber-800 transition-colors",
+            class_name="mb-4 pb-4 border-b border-slate-100",
+        ),
+        rx.el.button(
+            "Begin counselling",
+            rx.icon(
+                "arrow-right",
+                class_name=rx.match(
+                    stage,
+                    ("fresher", "h-3.5 w-3.5 ml-1.5 text-emerald-700"),
+                    ("early_career", "h-3.5 w-3.5 ml-1.5 text-indigo-900"),
+                    "h-3.5 w-3.5 ml-1.5 text-amber-700",
                 ),
             ),
-        ),
-        class_name=rx.cond(
-            stage == "fresher",
-            "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-emerald-300 hover:shadow-md transition-all duration-300",
-            rx.cond(
-                stage == "early_career",
-                "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-blue-300 hover:shadow-md transition-all duration-300",
-                "bg-white rounded-3xl border border-stone-200/60 p-6 hover:border-amber-300 hover:shadow-md transition-all duration-300",
+            on_click=lambda: AppState.go_to_register(stage),
+            class_name=rx.match(
+                stage,
+                (
+                    "fresher",
+                    "flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors",
+                ),
+                (
+                    "early_career",
+                    "flex items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
+                ),
+                "flex items-center text-xs font-bold text-amber-700 hover:text-amber-800 transition-colors",
             ),
+        ),
+        class_name=rx.match(
+            stage,
+            (
+                "fresher",
+                "bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-emerald-300 hover:shadow-md transition-all duration-300",
+            ),
+            (
+                "early_career",
+                "bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-300 hover:shadow-md transition-all duration-300",
+            ),
+            "bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-amber-300 hover:shadow-md transition-all duration-300",
         ),
     )
 
@@ -198,9 +311,20 @@ def stat(value: str, label: str) -> rx.Component:
     return rx.el.div(
         rx.el.p(
             value,
-            class_name="text-2xl sm:text-3xl font-extrabold text-stone-900 bg-gradient-to-r from-blue-700 via-indigo-600 to-rose-600 bg-clip-text text-transparent",
+            class_name="text-2xl sm:text-3xl font-extrabold text-indigo-900 tracking-tight",
         ),
-        rx.el.p(label, class_name="text-xs font-semibold text-stone-500 mt-1"),
+        rx.el.p(label, class_name="text-xs font-semibold text-slate-500 mt-1"),
+    )
+
+
+def trust_logo(name: str, icon: str) -> rx.Component:
+    return rx.el.div(
+        rx.icon(icon, class_name="h-4 w-4 text-slate-500"),
+        rx.el.span(
+            name,
+            class_name="text-xs font-bold text-slate-600 ml-1.5 tracking-wide",
+        ),
+        class_name="flex items-center px-4 py-2 bg-white border border-slate-200/70 rounded-xl",
     )
 
 
@@ -212,128 +336,252 @@ def filter_tab(label: str, key_val: str) -> rx.Component:
         type="button",
         class_name=rx.cond(
             is_selected,
-            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-gradient-to-r from-blue-600 to-indigo-650 text-white shadow-md shadow-blue-100 scale-[1.02] border border-blue-600/10",
-            "px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all text-stone-600 bg-white border border-stone-200 hover:bg-stone-50 hover:text-stone-900 hover:border-stone-300",
+            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-indigo-900 text-white shadow-sm scale-[1.02]",
+            "px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all text-slate-600 bg-white border border-slate-200/70 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300",
         ),
     )
 
 
 def career_path_card(path: dict[str, str]) -> rx.Component:
     theme_color = path["color_theme"]
+    icon_wrap = rx.match(
+        theme_color,
+        (
+            "blue",
+            "h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0",
+        ),
+        (
+            "rose",
+            "h-11 w-11 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shrink-0",
+        ),
+        (
+            "sage",
+            "h-11 w-11 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0",
+        ),
+        "h-11 w-11 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100 shrink-0",
+    )
+    icon_color = rx.match(
+        theme_color,
+        ("blue", "h-5 w-5 text-indigo-900"),
+        ("rose", "h-5 w-5 text-rose-700"),
+        ("sage", "h-5 w-5 text-emerald-700"),
+        "h-5 w-5 text-amber-700",
+    )
+    trend_badge = rx.match(
+        path["trend_key"],
+        (
+            "hot",
+            "text-[11px] font-bold text-rose-800 bg-rose-50 border border-rose-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1",
+        ),
+        (
+            "rising",
+            "text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1",
+        ),
+        "text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1",
+    )
+    role_chip = rx.match(
+        theme_color,
+        (
+            "blue",
+            "text-xs font-semibold text-indigo-900 bg-indigo-50/70 border border-indigo-100/70 px-2.5 py-1 rounded-xl",
+        ),
+        (
+            "rose",
+            "text-xs font-semibold text-rose-800 bg-rose-50/70 border border-rose-100/70 px-2.5 py-1 rounded-xl",
+        ),
+        (
+            "sage",
+            "text-xs font-semibold text-emerald-800 bg-emerald-50/70 border border-emerald-100/70 px-2.5 py-1 rounded-xl",
+        ),
+        "text-xs font-semibold text-amber-800 bg-amber-50/70 border border-amber-100/70 px-2.5 py-1 rounded-xl",
+    )
     return rx.el.div(
         rx.el.div(
             rx.el.div(
                 rx.el.div(
-                    rx.icon(
-                        path["icon"],
-                        class_name=rx.match(
-                            theme_color,
-                            ("blue", "h-5 w-5 text-blue-600"),
-                            ("rose", "h-5 w-5 text-rose-600"),
-                            ("sage", "h-5 w-5 text-emerald-600"),
-                            "h-5 w-5 text-amber-600",
-                        ),
-                    ),
-                    class_name=rx.match(
-                        theme_color,
-                        (
-                            "blue",
-                            "h-10 w-10 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100 shrink-0",
-                        ),
-                        (
-                            "rose",
-                            "h-10 w-10 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shrink-0",
-                        ),
-                        (
-                            "sage",
-                            "h-10 w-10 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0",
-                        ),
-                        "h-10 w-10 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100 shrink-0",
-                    ),
+                    rx.icon(path["icon"], class_name=icon_color),
+                    class_name=icon_wrap,
                 ),
-                rx.el.span(
-                    path["trend_label"],
-                    class_name=rx.match(
-                        path["trend_key"],
-                        (
-                            "hot",
-                            "text-[11px] font-extrabold text-red-700 bg-red-50 border border-red-100 px-2.5 py-0.5 rounded-full shadow-sm w-fit flex items-center gap-1",
-                        ),
-                        (
-                            "rising",
-                            "text-[11px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full shadow-sm w-fit flex items-center gap-1",
-                        ),
-                        "text-[11px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-full shadow-sm w-fit flex items-center gap-1",
-                    ),
-                ),
+                rx.el.span(path["trend_label"], class_name=trend_badge),
                 class_name="flex items-center justify-between w-full mb-4",
             ),
             rx.el.div(
                 rx.el.h3(
                     path["title"],
-                    class_name="text-base font-bold text-stone-900",
+                    class_name="text-base font-bold text-slate-900",
                 ),
                 rx.el.p(
                     path["desc"],
-                    class_name="text-xs text-stone-600 mt-1 leading-relaxed",
+                    class_name="text-xs text-slate-600 mt-1.5 leading-relaxed",
                 ),
                 class_name="w-full",
             ),
             class_name="w-full",
         ),
+        # Stats row
+        rx.el.div(
+            rx.el.div(
+                rx.icon("users", class_name="h-3.5 w-3.5 text-slate-500"),
+                rx.el.span(
+                    path["learners"],
+                    class_name="text-[11px] font-semibold text-slate-700 ml-1",
+                ),
+                class_name="flex items-center",
+            ),
+            rx.el.div(class_name="h-3 w-px bg-slate-200"),
+            rx.el.div(
+                rx.icon("clock", class_name="h-3.5 w-3.5 text-slate-500"),
+                rx.el.span(
+                    path["duration"],
+                    class_name="text-[11px] font-semibold text-slate-700 ml-1",
+                ),
+                class_name="flex items-center",
+            ),
+            rx.el.div(class_name="h-3 w-px bg-slate-200"),
+            rx.el.div(
+                rx.icon(
+                    "trending-up",
+                    class_name="h-3.5 w-3.5 text-emerald-700",
+                ),
+                rx.el.span(
+                    path["growth"],
+                    class_name="text-[11px] font-semibold text-emerald-800 ml-1",
+                ),
+                class_name="flex items-center",
+            ),
+            class_name="flex items-center gap-3 mt-4 pt-4 border-t border-slate-100",
+        ),
         # Key Skills Section
         rx.el.div(
             rx.el.p(
-                "Key skills in demand:",
-                class_name="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-2",
+                "Key skills in demand",
+                class_name="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2",
             ),
             rx.el.div(
                 rx.foreach(
                     path["key_skills"].split(","),
                     lambda skill: rx.el.span(
                         skill.strip(),
-                        class_name="text-xs font-semibold text-stone-700 bg-stone-50 border border-stone-200/60 px-2.5 py-0.5 rounded-xl",
+                        class_name="text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200/70 px-2.5 py-0.5 rounded-xl",
                     ),
                 ),
                 class_name="flex flex-wrap gap-1.5",
             ),
-            class_name="mt-4 pt-4 border-t border-stone-100",
+            class_name="mt-4 pt-4 border-t border-slate-100",
         ),
         # Roles Section
         rx.el.div(
             rx.el.p(
-                "Sample roles you can pursue:",
-                class_name="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-2",
+                "Sample roles you can pursue",
+                class_name="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2",
             ),
             rx.el.div(
                 rx.foreach(
                     path["roles"].split(","),
                     lambda role: rx.el.span(
                         role.strip(),
-                        class_name=rx.match(
-                            theme_color,
-                            (
-                                "blue",
-                                "text-xs font-semibold text-blue-700 bg-blue-50/70 border border-blue-100/50 px-2.5 py-1 rounded-xl",
-                            ),
-                            (
-                                "rose",
-                                "text-xs font-semibold text-rose-700 bg-rose-50/70 border border-rose-100/50 px-2.5 py-1 rounded-xl",
-                            ),
-                            (
-                                "sage",
-                                "text-xs font-semibold text-emerald-700 bg-emerald-50/70 border border-emerald-100/50 px-2.5 py-1 rounded-xl",
-                            ),
-                            "text-xs font-semibold text-amber-700 bg-amber-50/70 border border-amber-100/50 px-2.5 py-1 rounded-xl",
-                        ),
+                        class_name=role_chip,
                     ),
                 ),
                 class_name="flex flex-wrap gap-1.5",
             ),
-            class_name="mt-4 pt-4 border-t border-stone-100",
+            class_name="mt-4 pt-4 border-t border-slate-100",
         ),
-        class_name="bg-white rounded-3xl border border-stone-200/60 p-6 hover:shadow-lg hover:border-stone-300 transition-all duration-300 flex flex-col justify-between",
+        # CTA
+        rx.el.button(
+            "Get guided in this path",
+            rx.icon("arrow-right", class_name="h-3.5 w-3.5 ml-1.5"),
+            on_click=lambda: AppState.go_to_register(""),
+            class_name="mt-5 flex items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
+        ),
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:shadow-md hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between",
     )
+
+
+MENTORS: list[dict[str, str]] = [
+    {
+        "name": "Dr. Anika Rao",
+        "title": "Ex-Google • PhD, Carnegie Mellon",
+        "expertise": "Software, System Design, ML",
+        "rating": "4.9",
+        "sessions": "320",
+        "seed": "anika_rao_mentor",
+    },
+    {
+        "name": "Marcus Chen",
+        "title": "Senior PM, ex-Microsoft & Stripe",
+        "expertise": "Product, Strategy, Growth",
+        "rating": "4.9",
+        "sessions": "412",
+        "seed": "marcus_chen_mentor",
+    },
+    {
+        "name": "Priya Iyer",
+        "title": "Lead Data Scientist, FinTech",
+        "expertise": "Data Science, AI, Analytics",
+        "rating": "4.8",
+        "sessions": "275",
+        "seed": "priya_iyer_mentor",
+    },
+    {
+        "name": "Daniel Okafor",
+        "title": "UX Director • Adobe alum",
+        "expertise": "Design, UX Research, Portfolio",
+        "rating": "4.9",
+        "sessions": "198",
+        "seed": "daniel_okafor_mentor",
+    },
+]
+
+
+TESTIMONIALS: list[dict[str, str]] = [
+    {
+        "quote": "Pathwise helped me transition from civil engineering into a data analyst role at a Series B startup — in under four months. The roadmap was brutally clear and motivating.",
+        "name": "Sneha M.",
+        "role": "Career switcher → Data Analyst",
+        "seed": "testimonial_sneha",
+    },
+    {
+        "quote": "As a final-year student, I had no idea what I actually wanted. My counsellor helped me narrow down to product management and prep for top-tier interviews.",
+        "name": "Arjun T.",
+        "role": "Student → Associate PM",
+        "seed": "testimonial_arjun",
+    },
+    {
+        "quote": "I'd been stuck at the same level for three years. One deep-dive session reframed how I positioned my work — landed a senior role with a 38% raise.",
+        "name": "Rebecca L.",
+        "role": "Engineer → Senior Engineer",
+        "seed": "testimonial_rebecca",
+    },
+]
+
+
+LEARNING_OUTCOMES: list[tuple[str, str]] = [
+    (
+        "compass",
+        "A clear, written career direction tailored to your strengths and life context.",
+    ),
+    (
+        "route",
+        "A 30-60-90 day action plan with concrete weekly milestones.",
+    ),
+    (
+        "file-text",
+        "An ATS-optimized resume and LinkedIn rewrite playbook you can apply right away.",
+    ),
+    (
+        "messages-square",
+        "Interview frameworks (STAR, CIRCLE, system design) practiced with feedback.",
+    ),
+    (
+        "book-open",
+        "A curated reading and course list mapped to your target roles.",
+    ),
+    (
+        "shield-check",
+        "Confidence — backed by data, mentor experience, and a community of peers.",
+    ),
+]
 
 
 def landing() -> rx.Component:
@@ -342,87 +590,122 @@ def landing() -> rx.Component:
         rx.el.section(
             rx.el.div(
                 rx.el.div(
-                    rx.icon("sparkles", class_name="h-3.5 w-3.5 text-blue-600"),
-                    rx.el.span(
-                        "Personalized 1:1 career guidance",
-                        class_name="text-xs font-semibold text-stone-800",
-                    ),
-                    class_name="inline-flex items-center gap-1.5 bg-blue-50/80 border border-blue-100/60 px-3 py-1.5 rounded-full mb-6",
-                ),
-                rx.el.h1(
-                    "Build a career you ",
-                    rx.el.span(
-                        "truly love.",
-                        class_name="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 bg-clip-text text-transparent",
-                    ),
-                    class_name="text-4xl sm:text-5xl md:text-6xl font-extrabold text-stone-900 tracking-tight leading-tight",
-                ),
-                rx.el.p(
-                    "Get clarity on your next move with trusted, expert counsellors. Whether you are stepping into the workforce, growing fast, or pivoting to a new domain — we help you map out the path ahead.",
-                    class_name="text-sm sm:text-base text-stone-600 mt-6 max-w-2xl mx-auto leading-relaxed",
-                ),
-                rx.el.div(
-                    rx.el.button(
-                        "Get started",
-                        rx.icon("arrow-right", class_name="h-4 w-4 ml-2"),
-                        on_click=lambda: AppState.go_to_register(""),
-                        class_name="flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:shadow-blue-100 active:scale-95 transition-all font-semibold",
-                    ),
-                    rx.el.button(
-                        rx.icon("log-in", class_name="h-4 w-4 mr-2"),
-                        "Sign in",
-                        on_click=AppState.go_to_login,
-                        class_name="flex items-center text-stone-700 px-6 py-3 rounded-xl hover:bg-stone-50 transition-all font-semibold border border-stone-200/80 bg-white",
-                    ),
-                    class_name="flex flex-col sm:flex-row gap-3 justify-center mt-8",
-                ),
-                rx.cond(
-                    AppState.has_saved_account,
                     rx.el.div(
                         rx.icon(
-                            "hard-drive",
-                            class_name="h-3.5 w-3.5 text-blue-600",
+                            "graduation-cap",
+                            class_name="h-3.5 w-3.5 text-indigo-900",
                         ),
                         rx.el.span(
-                            "We found saved details from a previous session on this device.",
-                            class_name="text-xs font-medium text-stone-700 ml-1.5",
+                            "Pathwise Academy • Career Counselling Studio",
+                            class_name="text-xs font-bold text-slate-800 ml-1.5 tracking-wide",
+                        ),
+                        class_name="inline-flex items-center bg-white/80 border border-indigo-100/80 px-3.5 py-1.5 rounded-full mb-6 shadow-sm",
+                    ),
+                    rx.el.h1(
+                        "Learn the path. ",
+                        rx.el.span(
+                            "Walk it with confidence.",
+                            class_name="text-indigo-900",
+                        ),
+                        class_name="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1]",
+                    ),
+                    rx.el.p(
+                        "A scholarly, mentor-led approach to career guidance. We pair you with vetted counsellors and a structured curriculum so you don't just plan a career — you build the discipline to thrive in it.",
+                        class_name="text-sm sm:text-base text-slate-600 mt-6 max-w-2xl mx-auto leading-relaxed",
+                    ),
+                    rx.el.div(
+                        rx.el.button(
+                            rx.icon(
+                                "graduation-cap", class_name="h-4 w-4 mr-2"
+                            ),
+                            "Begin counselling",
+                            rx.icon("arrow-right", class_name="h-4 w-4 ml-2"),
+                            on_click=lambda: AppState.go_to_register(""),
+                            class_name="flex items-center bg-indigo-900 text-white px-6 py-3 rounded-xl hover:bg-indigo-950 hover:shadow-lg hover:shadow-indigo-100 active:scale-[0.98] transition-all font-semibold",
                         ),
                         rx.el.button(
+                            rx.icon("log-in", class_name="h-4 w-4 mr-2"),
                             "Sign in",
                             on_click=AppState.go_to_login,
-                            class_name="text-xs font-bold text-blue-700 hover:text-blue-900 ml-2 underline underline-offset-2",
+                            class_name="flex items-center text-slate-700 px-6 py-3 rounded-xl hover:bg-slate-50 transition-all font-semibold border border-slate-200/80 bg-white",
                         ),
-                        class_name="inline-flex items-center bg-blue-50/50 border border-blue-100/60 px-3.5 py-2 rounded-2xl mt-5 shadow-sm",
+                        class_name="flex flex-col sm:flex-row gap-3 justify-center mt-8",
                     ),
-                    rx.fragment(),
-                ),
-                rx.el.div(
-                    stat("12,000+", "Sessions completed"),
+                    rx.cond(
+                        AppState.has_saved_account,
+                        rx.el.div(
+                            rx.icon(
+                                "hard-drive",
+                                class_name="h-3.5 w-3.5 text-indigo-900",
+                            ),
+                            rx.el.span(
+                                "We found saved details from a previous session on this device.",
+                                class_name="text-xs font-medium text-slate-700 ml-1.5",
+                            ),
+                            rx.el.button(
+                                "Resume",
+                                on_click=AppState.go_to_login,
+                                class_name="text-xs font-bold text-indigo-900 hover:text-indigo-950 ml-2 underline underline-offset-2",
+                            ),
+                            class_name="inline-flex items-center bg-indigo-50/60 border border-indigo-100/60 px-3.5 py-2 rounded-2xl mt-5 shadow-sm",
+                        ),
+                        rx.fragment(),
+                    ),
+                    # Trust signals strip
                     rx.el.div(
-                        class_name="h-8 w-px bg-stone-200 hidden sm:block"
+                        rx.el.p(
+                            "Counsellors who've shaped careers at",
+                            class_name="text-[11px] font-bold uppercase tracking-widest text-slate-500 text-center mb-4",
+                        ),
+                        rx.el.div(
+                            trust_logo("Google", "search"),
+                            trust_logo("Microsoft", "square"),
+                            trust_logo("Stripe", "credit-card"),
+                            trust_logo("Adobe", "palette"),
+                            trust_logo("Amazon", "package"),
+                            trust_logo("Meta", "infinity"),
+                            class_name="flex flex-wrap items-center justify-center gap-2",
+                        ),
+                        class_name="mt-12",
                     ),
-                    stat("4.9 / 5", "Average rating"),
+                    # Stats
                     rx.el.div(
-                        class_name="h-8 w-px bg-stone-200 hidden sm:block"
+                        stat("12,000+", "Sessions completed"),
+                        rx.el.div(
+                            class_name="h-8 w-px bg-slate-200 hidden sm:block"
+                        ),
+                        stat("4.9 / 5", "Mentor rating"),
+                        rx.el.div(
+                            class_name="h-8 w-px bg-slate-200 hidden sm:block"
+                        ),
+                        stat("85%", "Reach goals in 90 days"),
+                        rx.el.div(
+                            class_name="h-8 w-px bg-slate-200 hidden sm:block"
+                        ),
+                        stat("60+", "Career domains"),
+                        class_name="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mt-10 pt-8 border-t border-slate-200/60",
                     ),
-                    stat("85%", "Career clarity gained"),
-                    class_name="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mt-12 pt-8 border-t border-stone-200/60",
+                    class_name="text-center max-w-4xl mx-auto",
                 ),
-                class_name="text-center max-w-4xl mx-auto",
+                class_name="relative",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12 sm:py-20",
+            class_name="px-4 sm:px-6 lg:px-8 py-14 sm:py-20 bg-gradient-to-b from-indigo-50/40 via-white to-white border-b border-slate-200/40",
         ),
-        # Audience
+        # Audience (Who we help — curriculum styled)
         rx.el.section(
             rx.el.div(
                 rx.el.div(
+                    rx.el.span(
+                        "FOR EVERY STAGE",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
                     rx.el.h2(
-                        "Who we help",
-                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                        "Counselling tracks designed for where you are.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
                     ),
                     rx.el.p(
-                        "Tailored counselling for every stage of your career journey.",
-                        class_name="text-sm text-stone-600 mt-2",
+                        "Each track has its own curriculum, mentor matching rules, and outcome milestones — so you get guidance that fits your reality.",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
                     class_name="text-center mb-10",
                 ),
@@ -433,6 +716,12 @@ def landing() -> rx.Component:
                         "Just stepping into the workforce? Discover roles that match your strengths and build a launch plan that works.",
                         "Starting out",
                         "fresher",
+                        [
+                            "Strengths & interest mapping",
+                            "First-resume bootcamp",
+                            "Internship & entry-role strategy",
+                            "Mock HR + technical screens",
+                        ],
                     ),
                     audience_card(
                         "trending-up",
@@ -440,6 +729,12 @@ def landing() -> rx.Component:
                         "1–5 years in? Get strategic guidance on growth, skill gaps, and how to land the next big opportunity.",
                         "Growing",
                         "early_career",
+                        [
+                            "Growth narrative & positioning",
+                            "Skill-gap audit and roadmap",
+                            "Senior-level interview prep",
+                            "Compensation negotiation",
+                        ],
                     ),
                     audience_card(
                         "shuffle",
@@ -447,33 +742,43 @@ def landing() -> rx.Component:
                         "Ready for a pivot? Map a clear, confident transition into a new domain or industry — without starting over.",
                         "Pivoting",
                         "switcher",
+                        [
+                            "Transferable-skill translation",
+                            "Targeted upskilling plan",
+                            "Bridge-role identification",
+                            "Story-driven resume rewrite",
+                        ],
                     ),
                     class_name="grid grid-cols-1 md:grid-cols-3 gap-6",
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12",
+            class_name="px-4 sm:px-6 lg:px-8 py-14",
         ),
-        # Explore career paths
+        # Explore career paths (richer educational treatment)
         rx.el.section(
             rx.el.div(
                 rx.el.div(
+                    rx.el.span(
+                        "CAREER PATH LIBRARY",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
                     rx.el.h2(
-                        "Explore career paths",
-                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                        "Explore the paths our counsellors specialize in.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
                     ),
                     rx.el.p(
-                        "Discover high-demand categories where our expert counsellors can fast-track your progression.",
-                        class_name="text-sm text-stone-600 mt-2",
+                        "Each path is a structured learning track — mapped to live market demand, validated by domain mentors, and refreshed every quarter.",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
                     class_name="text-center mb-8",
                 ),
                 rx.el.div(
                     filter_tab("All paths", "all"),
-                    filter_tab("🔥 Hot market", "hot"),
-                    filter_tab("📈 Rising", "rising"),
-                    filter_tab("✓ Steady", "steady"),
-                    class_name="flex flex-wrap justify-center items-center gap-2 mb-10 bg-stone-50/50 p-2 rounded-2xl border border-stone-150 max-w-md mx-auto",
+                    filter_tab("Hot market", "hot"),
+                    filter_tab("Rising", "rising"),
+                    filter_tab("Steady", "steady"),
+                    class_name="flex flex-wrap justify-center items-center gap-2 mb-10 bg-white p-2 rounded-2xl border border-slate-200/70 max-w-md mx-auto shadow-sm",
                 ),
                 rx.el.div(
                     rx.foreach(
@@ -483,56 +788,154 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12 bg-white border-y border-stone-200/40",
+            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-slate-50/50 border-y border-slate-200/40",
         ),
-        # How it works
+        # How it works (curriculum-styled)
         rx.el.section(
             rx.el.div(
                 rx.el.div(
+                    rx.el.span(
+                        "THE PATHWISE METHOD",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
                     rx.el.h2(
-                        "How it works",
-                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                        "A simple, structured path to clarity.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
                     ),
                     rx.el.p(
-                        "Three simple steps to clarity.",
-                        class_name="text-sm text-stone-600 mt-2",
+                        "Three guided modules — designed by educators, refined by counsellors.",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
                     class_name="text-center mb-10",
                 ),
                 rx.el.div(
                     feature_card(
                         "user-plus",
-                        "1. Register",
-                        "Tell us a bit about yourself and where you are in your career — takes under a minute.",
+                        "Register your profile",
+                        "Tell us who you are and where you are in your career — takes under a minute and helps us pre-match a counsellor.",
+                        "Module 01",
                     ),
                     feature_card(
                         "clipboard-list",
-                        "2. Share your goals",
-                        "Complete a guided intake so your counsellor understands your background, aspirations, and challenges.",
+                        "Complete a guided intake",
+                        "Walk through a structured questionnaire on goals, skills, and challenges. Your answers shape your personalized session.",
+                        "Module 02",
                     ),
                     feature_card(
                         "calendar-check",
-                        "3. Book your session",
-                        "Pick a time that works for you and meet your counsellor 1:1 for actionable, personalized advice.",
+                        "Meet your counsellor 1:1",
+                        "Pick a slot, join a focused video session, and walk away with a written action plan you can start that same week.",
+                        "Module 03",
                     ),
                     class_name="grid grid-cols-1 md:grid-cols-3 gap-6",
                 ),
                 class_name="max-w-6xl mx-auto",
                 id="how",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12 bg-stone-50/40 border-y border-stone-200/60",
+            class_name="px-4 sm:px-6 lg:px-8 py-14",
         ),
-        # Why Choose Pathwise (Extracted core value propositions)
+        # Learning outcomes
         rx.el.section(
             rx.el.div(
                 rx.el.div(
+                    rx.el.div(
+                        rx.el.span(
+                            "WHAT YOU'LL TAKE AWAY",
+                            class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                        ),
+                        rx.el.h2(
+                            "Learning outcomes from every counselling track.",
+                            class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                        ),
+                        rx.el.p(
+                            "Pathwise sessions are educational by design. You leave each track with tangible artifacts, frameworks, and a sharpened sense of direction — not just a chat.",
+                            class_name="text-sm text-slate-600 mt-3 leading-relaxed",
+                        ),
+                        rx.el.div(
+                            rx.el.button(
+                                "Start your track",
+                                rx.icon(
+                                    "arrow-right",
+                                    class_name="h-4 w-4 ml-2",
+                                ),
+                                on_click=lambda: AppState.go_to_register(""),
+                                class_name="inline-flex items-center bg-indigo-900 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-950 active:scale-[0.98] transition-all font-semibold text-sm shadow-sm",
+                            ),
+                            class_name="mt-6",
+                        ),
+                        class_name="",
+                    ),
+                    rx.el.div(
+                        rx.el.div(
+                            rx.el.div(
+                                rx.icon(
+                                    "book-open-check",
+                                    class_name="h-4 w-4 text-indigo-900",
+                                ),
+                                rx.el.span(
+                                    "Outcomes checklist",
+                                    class_name="text-sm font-bold text-slate-900 ml-2",
+                                ),
+                                class_name="flex items-center mb-3 pb-3 border-b border-slate-100",
+                            ),
+                            rx.el.ul(
+                                rx.foreach(
+                                    LEARNING_OUTCOMES,
+                                    lambda o: outcome_item(o[0], o[1]),
+                                ),
+                                class_name="divide-y divide-slate-100",
+                            ),
+                            class_name="bg-white rounded-2xl border border-slate-200/70 p-6",
+                        ),
+                        class_name="",
+                    ),
+                    class_name="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start",
+                ),
+                class_name="max-w-6xl mx-auto",
+            ),
+            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-gradient-to-b from-white to-indigo-50/30 border-y border-slate-200/40",
+        ),
+        # Mentor faculty
+        rx.el.section(
+            rx.el.div(
+                rx.el.div(
+                    rx.el.span(
+                        "MEET THE FACULTY",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
                     rx.el.h2(
-                        "Why choose Pathwise?",
-                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                        "Counsellors who've actually built the careers you're aiming for.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
                     ),
                     rx.el.p(
-                        "A framework-driven approach designed to turn uncertainty into career progression.",
-                        class_name="text-sm text-stone-600 mt-2",
+                        "Every Pathwise mentor is vetted on real industry experience, teaching ability, and a track record of helping people level up.",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
+                    ),
+                    class_name="text-center mb-10",
+                ),
+                rx.el.div(
+                    rx.foreach(MENTORS, mentor_card),
+                    class_name="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5",
+                ),
+                class_name="max-w-6xl mx-auto",
+            ),
+            class_name="px-4 sm:px-6 lg:px-8 py-14",
+        ),
+        # Why Choose Pathwise
+        rx.el.section(
+            rx.el.div(
+                rx.el.div(
+                    rx.el.span(
+                        "WHY PATHWISE",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
+                    rx.el.h2(
+                        "An academy-grade approach to career guidance.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                    ),
+                    rx.el.p(
+                        "Frameworks instead of feelings. Practice instead of platitudes. Outcomes you can point to.",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
                     class_name="text-center mb-10",
                 ),
@@ -552,7 +955,7 @@ def landing() -> rx.Component:
                     benefit_card(
                         "award",
                         "Domain-Specific Coaches",
-                        "Get matched with mentors who have actually worked at companies like Google, Microsoft, and high-growth scale-ups.",
+                        "Get matched with mentors who've actually worked at companies like Google, Microsoft, and high-growth scale-ups.",
                         "amber",
                     ),
                     benefit_card(
@@ -565,19 +968,49 @@ def landing() -> rx.Component:
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12 bg-white border-b border-stone-200/50",
+            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-slate-50/50 border-y border-slate-200/40",
         ),
-        # FAQ Section (Extracted content context on privacy, sessions, matching)
+        # Testimonials
         rx.el.section(
             rx.el.div(
                 rx.el.div(
+                    rx.el.span(
+                        "STUDENT STORIES",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
                     rx.el.h2(
-                        "Frequently Asked Questions",
-                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                        "Careers, reshaped — in their own words.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
+                    ),
+                    rx.el.p(
+                        "A glimpse of what people walk away with after just a few counselling sessions.",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
+                    ),
+                    class_name="text-center mb-10",
+                ),
+                rx.el.div(
+                    rx.foreach(TESTIMONIALS, testimonial_card),
+                    class_name="grid grid-cols-1 md:grid-cols-3 gap-6",
+                ),
+                class_name="max-w-6xl mx-auto",
+            ),
+            class_name="px-4 sm:px-6 lg:px-8 py-14",
+        ),
+        # FAQ Section
+        rx.el.section(
+            rx.el.div(
+                rx.el.div(
+                    rx.el.span(
+                        "ANSWERS",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
+                    rx.el.h2(
+                        "Frequently asked questions.",
+                        class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
                     ),
                     rx.el.p(
                         "Everything you need to know about our personal career counselling sessions.",
-                        class_name="text-sm text-stone-600 mt-2",
+                        class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
                     class_name="text-center mb-10",
                 ),
@@ -598,35 +1031,71 @@ def landing() -> rx.Component:
                         "Can I reschedule after booking?",
                         "Absolutely. Your confirmation email will include a reschedule link. You can change your slot up to 12 hours in advance at no extra cost.",
                     ),
-                    class_name="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto",
+                    faq_item(
+                        "Do you offer ongoing mentorship?",
+                        "Yes — after your first session, your counsellor can opt you into a multi-session track with weekly check-ins, accountability, and homework reviews.",
+                    ),
+                    faq_item(
+                        "Is Pathwise suitable for non-tech careers?",
+                        "Absolutely. We have counsellors across product, design, finance, consulting, healthcare, education, and more. Our method is domain-agnostic.",
+                    ),
+                    class_name="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto",
                 ),
                 class_name="max-w-6xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12 bg-stone-50/30 border-b border-stone-200/50",
+            class_name="px-4 sm:px-6 lg:px-8 py-14 bg-slate-50/50 border-y border-slate-200/40",
         ),
-        # CTA
+        # Final CTA
         rx.el.section(
             rx.el.div(
                 rx.el.div(
+                    rx.el.div(
+                        rx.icon(
+                            "graduation-cap",
+                            class_name="h-6 w-6 text-white",
+                        ),
+                        class_name="h-12 w-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-5",
+                    ),
                     rx.el.h2(
                         "Your next chapter starts here.",
-                        class_name="text-2xl sm:text-3xl font-semibold text-stone-900",
+                        class_name="text-2xl sm:text-4xl font-bold text-white tracking-tight",
                     ),
                     rx.el.p(
-                        "Join thousands who found direction with our counsellors.",
-                        class_name="text-sm text-stone-600 mt-2 mb-6",
+                        "Join thousands who turned uncertainty into a clear, structured plan with Pathwise.",
+                        class_name="text-sm sm:text-base text-indigo-100 mt-3 mb-7 max-w-xl mx-auto leading-relaxed",
                     ),
-                    rx.el.button(
-                        "Register now — it's free",
-                        rx.icon("arrow-right", class_name="h-4 w-4 ml-2"),
-                        on_click=lambda: AppState.go_to_register(""),
-                        class_name="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all font-semibold shadow-sm",
+                    rx.el.div(
+                        rx.el.button(
+                            rx.icon("user-plus", class_name="h-4 w-4 mr-2"),
+                            "Register — it's free to start",
+                            rx.icon("arrow-right", class_name="h-4 w-4 ml-2"),
+                            on_click=lambda: AppState.go_to_register(""),
+                            class_name="inline-flex items-center bg-white text-indigo-900 px-6 py-3 rounded-xl hover:bg-indigo-50 active:scale-[0.98] transition-all font-bold shadow-sm",
+                        ),
+                        rx.el.button(
+                            rx.icon("log-in", class_name="h-4 w-4 mr-2"),
+                            "Sign in",
+                            on_click=AppState.go_to_login,
+                            class_name="inline-flex items-center text-white px-6 py-3 rounded-xl hover:bg-white/10 transition-all font-semibold border border-white/30",
+                        ),
+                        class_name="flex flex-col sm:flex-row gap-3 justify-center",
                     ),
-                    class_name="text-center bg-white border border-stone-200/60 rounded-3xl p-8 sm:p-12",
+                    rx.el.div(
+                        rx.icon(
+                            "shield-check",
+                            class_name="h-3.5 w-3.5 text-indigo-200",
+                        ),
+                        rx.el.span(
+                            "Free intake • No credit card • Cancel anytime",
+                            class_name="text-xs text-indigo-100 ml-1.5 font-medium",
+                        ),
+                        class_name="flex items-center justify-center mt-6",
+                    ),
+                    class_name="text-center bg-indigo-900 rounded-3xl p-10 sm:p-14 border border-indigo-800",
                 ),
                 class_name="max-w-4xl mx-auto",
             ),
-            class_name="px-4 sm:px-6 lg:px-8 py-12",
+            class_name="px-4 sm:px-6 lg:px-8 py-14",
         ),
         class_name="w-full",
     )

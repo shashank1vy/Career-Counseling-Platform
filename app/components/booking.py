@@ -65,24 +65,24 @@ def session_card(s: dict) -> rx.Component:
                     s["icon"],
                     class_name=rx.cond(
                         selected,
-                        "h-4 w-4 text-blue-600",
-                        "h-4 w-4 text-stone-600",
+                        "h-4 w-4 text-indigo-900",
+                        "h-4 w-4 text-slate-600",
                     ),
                 ),
                 class_name=rx.cond(
                     selected,
-                    "h-9 w-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0",
-                    "h-9 w-9 rounded-xl bg-stone-50 border border-stone-200 flex items-center justify-center shrink-0",
+                    "h-9 w-9 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0",
+                    "h-9 w-9 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0",
                 ),
             ),
             rx.cond(
                 selected,
                 rx.el.div(
                     rx.icon("check", class_name="h-3 w-3 text-white"),
-                    class_name="h-5 w-5 rounded-full bg-blue-600 flex items-center justify-center shadow-sm",
+                    class_name="h-5 w-5 rounded-full bg-indigo-900 flex items-center justify-center shadow-sm",
                 ),
                 rx.el.div(
-                    class_name="h-5 w-5 rounded-full border border-stone-300",
+                    class_name="h-5 w-5 rounded-full border-2 border-slate-300",
                 ),
             ),
             class_name="flex items-center justify-between mb-3",
@@ -90,31 +90,31 @@ def session_card(s: dict) -> rx.Component:
         rx.el.div(
             rx.el.h3(
                 s["title"],
-                class_name="text-xs font-semibold text-stone-900",
+                class_name="text-sm font-bold text-slate-900 tracking-tight",
             ),
             rx.el.div(
                 rx.el.span(
                     s["duration"],
-                    class_name="text-[11px] font-medium text-stone-600",
+                    class_name="text-[11px] font-semibold text-slate-600",
                 ),
-                rx.el.span("•", class_name="text-[11px] text-stone-400 mx-1"),
+                rx.el.span("•", class_name="text-[11px] text-slate-400 mx-1"),
                 rx.el.span(
                     s["price"],
-                    class_name="text-[11px] font-semibold text-blue-700",
+                    class_name="text-[11px] font-bold text-amber-700",
                 ),
                 class_name="flex items-center mt-0.5",
             ),
             rx.el.p(
                 s["desc"],
-                class_name="text-[11px] text-stone-600 mt-2 leading-relaxed",
+                class_name="text-[11px] text-slate-600 mt-2 leading-relaxed",
             ),
             rx.el.div(
                 rx.icon("sparkle", class_name="h-3 w-3 mr-1"),
                 s["best_for"],
                 class_name=rx.cond(
                     selected,
-                    "inline-flex items-center text-[10px] font-semibold text-blue-800 bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full mt-3 w-fit",
-                    "inline-flex items-center text-[10px] font-semibold text-stone-700 bg-stone-100 border border-stone-200 px-2.5 py-0.5 rounded-full mt-3 w-fit",
+                    "inline-flex items-center text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full mt-3 w-fit",
+                    "inline-flex items-center text-[10px] font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full mt-3 w-fit",
                 ),
             ),
             class_name="text-left",
@@ -123,8 +123,8 @@ def session_card(s: dict) -> rx.Component:
         on_click=lambda: AppState.select_session_type(s["value"]),
         class_name=rx.cond(
             selected,
-            "block w-full text-left p-4 rounded-2xl border-2 border-blue-600 bg-gradient-to-b from-blue-50/50 to-blue-50/10 shadow-md transition-all duration-200 ring-2 ring-blue-500/10 scale-[1.01]",
-            "block w-full text-left p-4 rounded-2xl border border-stone-200 bg-white hover:border-blue-300 hover:bg-stone-50/30 active:scale-[0.99] transition-all duration-200",
+            "block w-full text-left p-4 rounded-2xl border-2 border-indigo-900 bg-indigo-50/30 shadow-md shadow-indigo-100 transition-all duration-200 ring-2 ring-indigo-200/40 scale-[1.01]",
+            "block w-full text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50/40 hover:shadow-sm active:scale-[0.99] transition-all duration-200",
         ),
     )
 
@@ -132,10 +132,13 @@ def session_card(s: dict) -> rx.Component:
 def prep_item(item: tuple[str, str]) -> rx.Component:
     return rx.el.li(
         rx.el.div(
-            rx.icon(item[0], class_name="h-4 w-4 text-blue-600"),
-            class_name="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0",
+            rx.icon(item[0], class_name="h-4 w-4 text-indigo-900"),
+            class_name="h-8 w-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0",
         ),
-        rx.el.span(item[1], class_name="text-sm text-gray-700 ml-3"),
+        rx.el.span(
+            item[1],
+            class_name="text-sm text-slate-700 ml-3 font-medium",
+        ),
         class_name="flex items-center py-2",
     )
 
@@ -144,10 +147,16 @@ def context_summary() -> rx.Component:
     return rx.el.div(
         rx.el.div(
             rx.el.div(
-                rx.icon("user-check", class_name="h-4 w-4 text-stone-600"),
+                rx.el.div(
+                    rx.icon(
+                        "user-check",
+                        class_name="h-3.5 w-3.5 text-indigo-900",
+                    ),
+                    class_name="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center",
+                ),
                 rx.el.h3(
                     "Your session context",
-                    class_name="text-sm font-semibold text-stone-900 ml-2",
+                    class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
                 ),
                 class_name="flex items-center",
             ),
@@ -156,39 +165,39 @@ def context_summary() -> rx.Component:
                 "Edit",
                 type="button",
                 on_click=AppState.edit_intake,
-                class_name="flex items-center text-xs font-semibold text-stone-600 hover:text-stone-800",
+                class_name="flex items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
             ),
-            class_name="flex items-center justify-between mb-4 pb-3 border-b border-stone-100",
+            class_name="flex items-center justify-between mb-4 pb-3 border-b border-slate-100",
         ),
         rx.el.div(
             rx.el.div(
                 rx.el.p(
                     "Counselling for",
-                    class_name="text-[10px] font-semibold uppercase tracking-wide text-stone-500",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                 ),
                 rx.el.p(
                     AppState.full_name,
-                    class_name="text-sm font-semibold text-stone-900 mt-1",
+                    class_name="text-sm font-semibold text-slate-900 mt-1",
                 ),
                 rx.el.p(
                     AppState.email,
-                    class_name="text-xs text-stone-600 mt-0.5",
+                    class_name="text-xs text-slate-600 mt-0.5",
                 ),
             ),
             rx.el.div(
                 rx.el.p(
                     "Stage",
-                    class_name="text-[10px] font-semibold uppercase tracking-wide text-stone-500",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                 ),
                 rx.el.p(
                     AppState.stage_label,
-                    class_name="text-sm text-stone-900 mt-1",
+                    class_name="text-sm text-slate-900 mt-1 font-medium",
                 ),
             ),
             rx.el.div(
                 rx.el.p(
                     "Top focus areas",
-                    class_name="text-[10px] font-semibold uppercase tracking-wide text-stone-500",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                 ),
                 rx.cond(
                     AppState.guidance_areas.length() > 0,
@@ -197,44 +206,44 @@ def context_summary() -> rx.Component:
                             AppState.guidance_areas,
                             lambda a: rx.el.span(
                                 a,
-                                class_name="text-[11px] font-semibold text-stone-700 bg-stone-100 border border-stone-200 px-2 py-0.5 rounded-full",
+                                class_name="text-[11px] font-semibold text-indigo-900 bg-indigo-50 border border-indigo-100/80 px-2 py-0.5 rounded-full",
                             ),
                         ),
                         class_name="flex flex-wrap gap-1 mt-1",
                     ),
                     rx.el.p(
                         "General career guidance",
-                        class_name="text-sm text-stone-500 italic mt-1",
+                        class_name="text-sm text-slate-500 italic mt-1",
                     ),
                 ),
             ),
             rx.el.div(
                 rx.el.p(
                     "Resume",
-                    class_name="text-[10px] font-semibold uppercase tracking-wide text-stone-500",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                 ),
                 rx.cond(
                     AppState.resume_filename != "",
                     rx.el.div(
                         rx.icon(
                             "file-check",
-                            class_name="h-4 w-4 text-stone-600 mr-1.5",
+                            class_name="h-4 w-4 text-emerald-700 mr-1.5",
                         ),
                         rx.el.span(
                             "Attached",
-                            class_name="text-sm font-medium text-stone-900",
+                            class_name="text-sm font-semibold text-slate-900",
                         ),
                         class_name="flex items-center mt-1",
                     ),
                     rx.el.p(
                         "Not uploaded",
-                        class_name="text-sm text-stone-500 italic mt-1",
+                        class_name="text-sm text-slate-500 italic mt-1",
                     ),
                 ),
             ),
             class_name="grid grid-cols-1 sm:grid-cols-2 gap-4",
         ),
-        class_name="bg-white rounded-2xl border border-stone-200/80 p-5",
+        class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm",
     )
 
 
@@ -242,34 +251,41 @@ def calendly_section() -> rx.Component:
     return rx.el.div(
         rx.el.div(
             rx.el.div(
-                rx.icon("calendar", class_name="h-4 w-4 text-stone-600"),
+                rx.el.div(
+                    rx.icon(
+                        "calendar",
+                        class_name="h-3.5 w-3.5 text-indigo-900",
+                    ),
+                    class_name="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center",
+                ),
                 rx.el.h3(
                     "Pick a time that works for you",
-                    class_name="text-sm font-semibold text-stone-900 ml-2",
+                    class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
                 ),
                 class_name="flex items-center",
             ),
             rx.el.div(
                 rx.icon(
-                    "shield-check", class_name="h-3.5 w-3.5 text-stone-500"
+                    "shield-check",
+                    class_name="h-3.5 w-3.5 text-emerald-700",
                 ),
                 rx.el.span(
                     "Powered by Calendly",
-                    class_name="text-[11px] font-medium text-stone-500 ml-1",
+                    class_name="text-[11px] font-semibold text-slate-600 ml-1",
                 ),
                 class_name="flex items-center",
             ),
-            class_name="flex items-center justify-between mb-4 pb-3 border-b border-stone-100",
+            class_name="flex items-center justify-between mb-4 pb-3 border-b border-slate-100",
         ),
         rx.el.div(
             rx.el.div(
                 rx.el.p(
                     "Selected:",
-                    class_name="text-xs text-stone-500",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                 ),
                 rx.el.p(
                     AppState.session_label,
-                    class_name="text-sm font-semibold text-stone-900 mt-0.5",
+                    class_name="text-sm font-semibold text-slate-900 mt-0.5",
                 ),
             ),
             rx.el.a(
@@ -278,26 +294,27 @@ def calendly_section() -> rx.Component:
                 href=AppState.calendly_url,
                 target="_blank",
                 rel="noopener noreferrer",
-                class_name="flex flex-row-reverse items-center text-xs font-semibold text-stone-600 hover:text-stone-800",
+                class_name="flex flex-row-reverse items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
             ),
-            class_name="flex items-center justify-between mb-4 p-3 bg-stone-50/50 border border-stone-150 rounded-xl",
+            class_name="flex items-center justify-between mb-4 p-3.5 bg-indigo-50/40 border border-indigo-100 rounded-xl",
         ),
         rx.el.iframe(
             src=AppState.calendly_url,
             title="Calendly booking calendar",
-            class_name="w-full rounded-xl border border-stone-200/80 bg-white",
+            class_name="w-full rounded-xl border border-slate-200/80 bg-white",
             style={"minWidth": "320px", "height": "720px"},
             custom_attrs={"frameborder": "0", "loading": "lazy"},
             key=AppState.calendly_url,
         ),
         rx.el.p(
             rx.icon(
-                "info", class_name="h-3.5 w-3.5 mr-1 inline text-stone-400"
+                "info",
+                class_name="h-3.5 w-3.5 mr-1 inline text-slate-400",
             ),
             "Don't see your timezone? The calendar adapts automatically.",
-            class_name="text-xs text-stone-500 mt-3 flex items-center",
+            class_name="text-xs text-slate-500 mt-3 flex items-center",
         ),
-        class_name="bg-white rounded-2xl border border-stone-200/80 p-5",
+        class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm",
     )
 
 
@@ -308,23 +325,31 @@ def booking_view() -> rx.Component:
                 rx.icon("arrow-left", class_name="h-4 w-4 mr-1.5"),
                 "Back to review",
                 on_click=AppState.go_to_review,
-                class_name="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-6",
+                class_name="flex items-center text-sm font-semibold text-slate-600 hover:text-indigo-900 mb-6 transition-colors",
             ),
             rx.el.div(
                 rx.el.div(
-                    rx.icon(
-                        "calendar-check", class_name="h-5 w-5 text-blue-600"
+                    rx.el.span(
+                        "MODULE 04 • BOOKING",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
                     ),
-                    class_name="h-11 w-11 rounded-xl bg-blue-50 flex items-center justify-center mb-4",
+                    class_name="mb-3",
+                ),
+                rx.el.div(
+                    rx.icon(
+                        "calendar-check",
+                        class_name="h-5 w-5 text-indigo-900",
+                    ),
+                    class_name="h-11 w-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-4",
                 ),
                 rx.el.h1(
                     "Book your session, ",
                     AppState.first_name,
-                    class_name="text-2xl sm:text-3xl font-bold text-gray-900",
+                    class_name="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight",
                 ),
                 rx.el.p(
                     "Choose a session type, pick a time, and we'll meet you 1:1 with personalized guidance based on everything you've shared.",
-                    class_name="text-sm text-gray-600 mt-2 max-w-2xl",
+                    class_name="text-sm text-slate-600 mt-2 max-w-2xl",
                 ),
                 class_name="mb-8",
             ),
@@ -337,30 +362,33 @@ def booking_view() -> rx.Component:
                     rx.el.div(
                         rx.el.div(
                             rx.el.div(
-                                rx.icon(
-                                    "layers",
-                                    class_name="h-4 w-4 text-stone-700",
+                                rx.el.div(
+                                    rx.icon(
+                                        "layers",
+                                        class_name="h-3.5 w-3.5 text-indigo-900",
+                                    ),
+                                    class_name="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center",
                                 ),
                                 rx.el.h3(
                                     "Choose a session type",
-                                    class_name="text-sm font-semibold text-stone-900 ml-2",
+                                    class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
                                 ),
                                 class_name="flex items-center",
                             ),
                             rx.el.span(
                                 rx.el.span(
                                     "Step 1 of 2",
-                                    class_name="text-[11px] font-semibold text-stone-700",
+                                    class_name="text-[11px] font-bold text-indigo-700",
                                 ),
-                                class_name="bg-stone-100 px-2 py-0.5 rounded-full",
+                                class_name="bg-indigo-50 border border-indigo-100/80 px-2.5 py-0.5 rounded-full",
                             ),
-                            class_name="flex items-center justify-between mb-4 pb-3 border-b border-stone-100",
+                            class_name="flex items-center justify-between mb-4 pb-3 border-b border-slate-100",
                         ),
                         rx.el.div(
                             rx.foreach(SESSION_TYPES, session_card),
                             class_name="grid grid-cols-1 sm:grid-cols-2 gap-3",
                         ),
-                        class_name="bg-white rounded-2xl border border-stone-200/80 p-5",
+                        class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm",
                     ),
                     rx.el.div(class_name="h-5"),
                     calendly_section(),
@@ -371,31 +399,34 @@ def booking_view() -> rx.Component:
                             rx.el.div(
                                 rx.icon(
                                     "circle-check",
-                                    class_name="h-5 w-5 text-stone-700",
+                                    class_name="h-5 w-5 text-emerald-700",
                                 ),
-                                class_name="h-10 w-10 rounded-xl bg-stone-100 flex items-center justify-center shrink-0",
+                                class_name="h-10 w-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0",
                             ),
                             rx.el.div(
                                 rx.el.p(
                                     "Already picked a slot?",
-                                    class_name="text-sm font-semibold text-stone-900",
+                                    class_name="text-sm font-semibold text-slate-900",
                                 ),
                                 rx.el.p(
                                     "Tap below once your booking is confirmed in Calendly. We'll send you everything you need to prepare.",
-                                    class_name="text-xs text-stone-600 mt-0.5",
+                                    class_name="text-xs text-slate-600 mt-0.5",
                                 ),
                                 class_name="ml-3 flex-1",
                             ),
                             class_name="flex items-start mb-4",
                         ),
                         rx.el.button(
-                            rx.icon("check", class_name="h-4 w-4 mr-2"),
+                            rx.icon(
+                                "check",
+                                class_name="h-4 w-4 mr-2",
+                            ),
                             "I've booked my session",
                             type="button",
                             on_click=AppState.confirm_booking,
-                            class_name="w-full flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.99] rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:ring-2 focus:ring-blue-500/20 focus:outline-none",
+                            class_name="w-full flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-indigo-900 hover:bg-indigo-950 active:scale-[0.99] rounded-xl transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-indigo-100 focus:ring-2 focus:ring-indigo-300/50 focus:outline-none",
                         ),
-                        class_name="bg-white rounded-2xl border border-stone-200/80 p-5",
+                        class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm",
                     ),
                     class_name="lg:col-span-2",
                 ),
@@ -405,46 +436,55 @@ def booking_view() -> rx.Component:
                     rx.el.div(class_name="h-5"),
                     rx.el.div(
                         rx.el.div(
-                            rx.icon(
-                                "list-checks",
-                                class_name="h-4 w-4 text-stone-700",
+                            rx.el.div(
+                                rx.icon(
+                                    "list-checks",
+                                    class_name="h-3.5 w-3.5 text-amber-700",
+                                ),
+                                class_name="h-7 w-7 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center",
                             ),
                             rx.el.h3(
                                 "How to prepare",
-                                class_name="text-sm font-semibold text-stone-900 ml-2",
+                                class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
                             ),
-                            class_name="flex items-center mb-3 pb-3 border-b border-stone-100",
+                            class_name="flex items-center mb-3 pb-3 border-b border-slate-100",
                         ),
                         rx.el.ul(
                             rx.foreach(PREP_CHECKLIST, prep_item),
-                            class_name="divide-y divide-stone-100",
+                            class_name="divide-y divide-slate-100",
                         ),
-                        class_name="bg-white rounded-2xl border border-stone-200/80 p-5",
+                        class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm",
                     ),
                     rx.el.div(class_name="h-5"),
                     rx.el.div(
                         rx.el.div(
-                            rx.icon(
-                                "life-buoy",
-                                class_name="h-4 w-4 text-blue-600",
+                            rx.el.div(
+                                rx.icon(
+                                    "life-buoy",
+                                    class_name="h-3.5 w-3.5 text-indigo-900",
+                                ),
+                                class_name="h-7 w-7 rounded-lg bg-white border border-indigo-100 flex items-center justify-center",
                             ),
                             rx.el.h3(
                                 "Need help?",
-                                class_name="text-sm font-semibold text-gray-900 ml-2",
+                                class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
                             ),
                             class_name="flex items-center mb-3",
                         ),
                         rx.el.p(
                             "Trouble finding a time, or need to reschedule? We're here.",
-                            class_name="text-xs text-gray-600 mb-3",
+                            class_name="text-xs text-slate-600 mb-3 leading-relaxed",
                         ),
                         rx.el.a(
-                            rx.icon("mail", class_name="h-3.5 w-3.5 mr-1.5"),
+                            rx.icon(
+                                "mail",
+                                class_name="h-3.5 w-3.5 mr-1.5",
+                            ),
                             "support@pathwise.app",
                             href="mailto:support@pathwise.app",
-                            class_name="flex items-center text-xs font-semibold text-blue-600 hover:text-blue-700",
+                            class_name="flex items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
                         ),
-                        class_name="bg-blue-50/40 rounded-2xl border border-blue-100 p-5",
+                        class_name="bg-indigo-50/40 rounded-2xl border border-indigo-100 p-5",
                     ),
                     class_name="",
                 ),
@@ -456,17 +496,51 @@ def booking_view() -> rx.Component:
     )
 
 
+def next_step_item(
+    num: str, title: str, desc: str, is_first: bool
+) -> rx.Component:
+    return rx.el.li(
+        rx.el.div(
+            num,
+            class_name="h-7 w-7 rounded-full bg-indigo-900 text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-sm",
+        ),
+        rx.el.div(
+            rx.el.p(
+                title,
+                class_name="text-sm font-semibold text-slate-900 tracking-tight",
+            ),
+            rx.el.p(
+                desc,
+                class_name="text-xs text-slate-600 mt-0.5 leading-relaxed",
+            ),
+            class_name="ml-3",
+        ),
+        class_name=rx.cond(
+            is_first,
+            "flex items-start py-3",
+            "flex items-start py-3 border-t border-slate-100",
+        ),
+    )
+
+
 def confirmation_view() -> rx.Component:
     return rx.el.div(
         rx.el.div(
             rx.el.div(
                 rx.el.div(
                     rx.icon("check", class_name="h-7 w-7 text-white"),
-                    class_name="h-14 w-14 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-5 ring-8 ring-green-50",
+                    class_name="h-14 w-14 rounded-full bg-emerald-600 flex items-center justify-center mx-auto mb-5 ring-8 ring-emerald-50 shadow-lg shadow-emerald-100",
+                ),
+                rx.el.div(
+                    rx.el.span(
+                        "MODULE 05 • CONFIRMED",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-emerald-700",
+                    ),
+                    class_name="text-center mb-3",
                 ),
                 rx.el.h1(
                     "You're booked!",
-                    class_name="text-3xl sm:text-4xl font-bold text-gray-900 text-center",
+                    class_name="text-3xl sm:text-4xl font-bold text-slate-900 text-center tracking-tight",
                 ),
                 rx.el.p(
                     "Nice work, ",
@@ -474,10 +548,10 @@ def confirmation_view() -> rx.Component:
                     " — a calendar invite is on its way to ",
                     rx.el.span(
                         AppState.email,
-                        class_name="font-semibold text-gray-900",
+                        class_name="font-semibold text-slate-900",
                     ),
                     ".",
-                    class_name="text-sm sm:text-base text-gray-600 text-center mt-3 max-w-xl mx-auto",
+                    class_name="text-sm sm:text-base text-slate-600 text-center mt-3 max-w-xl mx-auto",
                 ),
                 class_name="mb-8",
             ),
@@ -487,155 +561,112 @@ def confirmation_view() -> rx.Component:
                     rx.el.div(
                         rx.icon(
                             "calendar-check",
-                            class_name="h-4 w-4 text-blue-600",
+                            class_name="h-4 w-4 text-indigo-900",
                         ),
                         rx.el.span(
                             "Confirmed session",
-                            class_name="text-[11px] font-semibold uppercase tracking-wide text-blue-700 ml-1.5",
+                            class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700 ml-1.5",
                         ),
                         class_name="flex items-center mb-3",
                     ),
                     rx.el.h2(
                         AppState.session_label,
-                        class_name="text-xl font-bold text-gray-900",
+                        class_name="text-xl font-bold text-slate-900 tracking-tight",
                     ),
                     rx.el.p(
                         "1:1 video session with a Pathwise career counsellor.",
-                        class_name="text-sm text-gray-600 mt-1",
+                        class_name="text-sm text-slate-600 mt-1",
                     ),
-                    class_name="mb-5 pb-5 border-b border-gray-100",
+                    class_name="mb-5 pb-5 border-b border-slate-100",
                 ),
                 rx.el.div(
                     rx.el.div(
                         rx.el.p(
                             "Booked for",
-                            class_name="text-[10px] font-semibold uppercase tracking-wide text-gray-500",
+                            class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                         ),
                         rx.el.p(
                             AppState.full_name,
-                            class_name="text-sm font-semibold text-gray-900 mt-1",
+                            class_name="text-sm font-semibold text-slate-900 mt-1",
                         ),
                     ),
                     rx.el.div(
                         rx.el.p(
                             "Confirmation sent to",
-                            class_name="text-[10px] font-semibold uppercase tracking-wide text-gray-500",
+                            class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                         ),
                         rx.el.p(
                             AppState.email,
-                            class_name="text-sm text-gray-900 mt-1",
+                            class_name="text-sm text-slate-900 mt-1 font-medium",
                         ),
                     ),
                     rx.el.div(
                         rx.el.p(
                             "Stage",
-                            class_name="text-[10px] font-semibold uppercase tracking-wide text-gray-500",
+                            class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                         ),
                         rx.el.p(
                             AppState.stage_label,
-                            class_name="text-sm text-gray-900 mt-1",
+                            class_name="text-sm text-slate-900 mt-1 font-medium",
                         ),
                     ),
                     rx.el.div(
                         rx.el.p(
                             "Phone",
-                            class_name="text-[10px] font-semibold uppercase tracking-wide text-gray-500",
+                            class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                         ),
                         rx.el.p(
                             AppState.phone,
-                            class_name="text-sm text-gray-900 mt-1",
+                            class_name="text-sm text-slate-900 mt-1 font-medium",
                         ),
                     ),
                     class_name="grid grid-cols-1 sm:grid-cols-2 gap-4",
                 ),
-                class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+                class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
             ),
             # Next steps
             rx.el.div(
                 rx.el.div(
-                    rx.icon("rocket", class_name="h-4 w-4 text-blue-600"),
+                    rx.el.div(
+                        rx.icon(
+                            "rocket",
+                            class_name="h-3.5 w-3.5 text-indigo-900",
+                        ),
+                        class_name="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center",
+                    ),
                     rx.el.h3(
                         "What's next",
-                        class_name="text-sm font-semibold text-gray-900 ml-2",
+                        class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
                     ),
-                    class_name="flex items-center mb-4 pb-3 border-b border-gray-100",
+                    class_name="flex items-center mb-4 pb-3 border-b border-slate-100",
                 ),
                 rx.el.ol(
-                    rx.el.li(
-                        rx.el.div(
-                            "1",
-                            class_name="h-6 w-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0",
-                        ),
-                        rx.el.div(
-                            rx.el.p(
-                                "Check your inbox",
-                                class_name="text-sm font-semibold text-gray-900",
-                            ),
-                            rx.el.p(
-                                "We've sent a calendar invite with the video link. Add it to your calendar so you don't miss it.",
-                                class_name="text-xs text-gray-600 mt-0.5",
-                            ),
-                            class_name="ml-3",
-                        ),
-                        class_name="flex items-start py-3",
+                    next_step_item(
+                        "1",
+                        "Check your inbox",
+                        "We've sent a calendar invite with the video link. Add it to your calendar so you don't miss it.",
+                        True,
                     ),
-                    rx.el.li(
-                        rx.el.div(
-                            "2",
-                            class_name="h-6 w-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0",
-                        ),
-                        rx.el.div(
-                            rx.el.p(
-                                "Get matched with a counsellor",
-                                class_name="text-sm font-semibold text-gray-900",
-                            ),
-                            rx.el.p(
-                                "Within 24 hours, we'll match you with a counsellor who specializes in your goals and stage.",
-                                class_name="text-xs text-gray-600 mt-0.5",
-                            ),
-                            class_name="ml-3",
-                        ),
-                        class_name="flex items-start py-3 border-t border-gray-100",
+                    next_step_item(
+                        "2",
+                        "Get matched with a counsellor",
+                        "Within 24 hours, we'll match you with a counsellor who specializes in your goals and stage.",
+                        False,
                     ),
-                    rx.el.li(
-                        rx.el.div(
-                            "3",
-                            class_name="h-6 w-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0",
-                        ),
-                        rx.el.div(
-                            rx.el.p(
-                                "Show up prepared",
-                                class_name="text-sm font-semibold text-gray-900",
-                            ),
-                            rx.el.p(
-                                "Review your goals, have your questions ready, and join from a quiet space 5 minutes early.",
-                                class_name="text-xs text-gray-600 mt-0.5",
-                            ),
-                            class_name="ml-3",
-                        ),
-                        class_name="flex items-start py-3 border-t border-gray-100",
+                    next_step_item(
+                        "3",
+                        "Show up prepared",
+                        "Review your goals, have your questions ready, and join from a quiet space 5 minutes early.",
+                        False,
                     ),
-                    rx.el.li(
-                        rx.el.div(
-                            "4",
-                            class_name="h-6 w-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shrink-0",
-                        ),
-                        rx.el.div(
-                            rx.el.p(
-                                "Walk away with a plan",
-                                class_name="text-sm font-semibold text-gray-900",
-                            ),
-                            rx.el.p(
-                                "After the session, you'll receive a written summary with action items and recommended resources.",
-                                class_name="text-xs text-gray-600 mt-0.5",
-                            ),
-                            class_name="ml-3",
-                        ),
-                        class_name="flex items-start py-3 border-t border-gray-100",
+                    next_step_item(
+                        "4",
+                        "Walk away with a plan",
+                        "After the session, you'll receive a written summary with action items and recommended resources.",
+                        False,
                     ),
-                    class_name="",
                 ),
-                class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+                class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
             ),
             # Support / actions
             rx.el.div(
@@ -643,18 +674,18 @@ def confirmation_view() -> rx.Component:
                     rx.el.div(
                         rx.icon(
                             "life-buoy",
-                            class_name="h-5 w-5 text-blue-600",
+                            class_name="h-5 w-5 text-amber-700",
                         ),
-                        class_name="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0",
+                        class_name="h-10 w-10 rounded-xl bg-white border border-amber-200 flex items-center justify-center shrink-0",
                     ),
                     rx.el.div(
                         rx.el.p(
                             "Need to reschedule or have questions?",
-                            class_name="text-sm font-semibold text-gray-900",
+                            class_name="text-sm font-semibold text-slate-900 tracking-tight",
                         ),
                         rx.el.p(
                             "Use the link in your confirmation email to reschedule, or reach our team anytime.",
-                            class_name="text-xs text-gray-600 mt-0.5",
+                            class_name="text-xs text-slate-600 mt-0.5 leading-relaxed",
                         ),
                         class_name="ml-3 flex-1",
                     ),
@@ -665,17 +696,17 @@ def confirmation_view() -> rx.Component:
                         rx.icon("mail", class_name="h-4 w-4 mr-2"),
                         "Email support",
                         href="mailto:support@pathwise.app",
-                        class_name="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-all",
+                        class_name="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-amber-300 transition-all",
                     ),
                     rx.el.a(
                         rx.icon("message-circle", class_name="h-4 w-4 mr-2"),
                         "Help center",
                         href="#",
-                        class_name="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-all",
+                        class_name="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-amber-300 transition-all",
                     ),
                     class_name="grid grid-cols-1 sm:grid-cols-2 gap-3",
                 ),
-                class_name="bg-blue-50/40 rounded-2xl border border-blue-100 p-5 mb-5",
+                class_name="bg-amber-50/40 rounded-2xl border border-amber-200/70 p-5 mb-5",
             ),
             # Storage notice
             rx.el.div(storage_inline_notice(), class_name="mb-5"),
@@ -685,13 +716,13 @@ def confirmation_view() -> rx.Component:
                     rx.icon("home", class_name="h-4 w-4 mr-2"),
                     "Back to home",
                     on_click=AppState.restart_journey,
-                    class_name="flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold text-stone-700 bg-white border border-stone-300 rounded-xl hover:bg-stone-50 hover:border-stone-400 active:scale-[0.99] transition-all duration-200 focus:ring-2 focus:ring-stone-500/10 focus:outline-none",
+                    class_name="flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-slate-400 active:scale-[0.99] transition-all duration-200 focus:ring-2 focus:ring-slate-300/30 focus:outline-none",
                 ),
                 rx.el.a(
                     rx.icon("share-2", class_name="h-4 w-4 mr-2"),
                     "Tell a friend",
                     href="mailto:?subject=Check%20out%20Pathwise&body=I%20just%20booked%20a%20career%20counselling%20session%20with%20Pathwise%20—%20you%20might%20like%20it%20too%3A%20https%3A%2F%2Fpathwise.app",
-                    class_name="flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.99] rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:ring-2 focus:ring-blue-500/20 focus:outline-none",
+                    class_name="flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-indigo-900 hover:bg-indigo-950 active:scale-[0.99] rounded-xl transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-indigo-100 focus:ring-2 focus:ring-indigo-300/50 focus:outline-none",
                 ),
                 class_name="flex flex-col sm:flex-row gap-3",
             ),

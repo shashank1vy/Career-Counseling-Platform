@@ -3,6 +3,13 @@ from app.states.app_state import AppState, UPLOAD_ID
 from app.components.storage_status import storage_inline_notice
 
 
+INPUT_CLS = (
+    "w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl "
+    "hover:border-indigo-300 focus:ring-2 focus:ring-indigo-900/15 "
+    "focus:border-indigo-700 outline-none transition-all duration-200 "
+    "text-slate-900 placeholder-slate-400 text-sm shadow-sm"
+)
+
 GUIDANCE_OPTIONS = [
     ("Resume review", "file-text"),
     ("Interview prep", "messages-square"),
@@ -15,17 +22,34 @@ GUIDANCE_OPTIONS = [
 ]
 
 
-def section_header(icon: str, title: str, subtitle: str) -> rx.Component:
+def section_header(
+    icon: str, title: str, subtitle: str, step: str = ""
+) -> rx.Component:
     return rx.el.div(
         rx.el.div(
-            rx.icon(icon, class_name="h-5 w-5 text-blue-600"),
-            class_name="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0",
+            rx.el.div(
+                rx.icon(icon, class_name="h-5 w-5 text-indigo-900"),
+                class_name="h-10 w-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0",
+            ),
+            rx.el.div(
+                rx.el.h3(
+                    title,
+                    class_name="text-base font-semibold text-slate-900 tracking-tight",
+                ),
+                rx.el.p(subtitle, class_name="text-xs text-slate-500 mt-0.5"),
+                class_name="ml-3",
+            ),
+            class_name="flex items-center",
         ),
-        rx.el.div(
-            rx.el.h3(title, class_name="text-base font-semibold text-gray-900"),
-            rx.el.p(subtitle, class_name="text-xs text-gray-500 mt-0.5"),
+        rx.cond(
+            step != "",
+            rx.el.span(
+                step,
+                class_name="text-[10px] font-bold uppercase tracking-widest text-indigo-700 bg-indigo-50/60 border border-indigo-100 px-2.5 py-1 rounded-full",
+            ),
+            rx.fragment(),
         ),
-        class_name="flex items-center gap-3 mb-5",
+        class_name="flex items-center justify-between mb-5",
     )
 
 
@@ -33,9 +57,11 @@ def field_label(text: str, required: bool = False) -> rx.Component:
     return rx.el.label(
         text,
         rx.cond(
-            required, rx.el.span(" *", class_name="text-red-500"), rx.fragment()
+            required,
+            rx.el.span(" *", class_name="text-rose-600"),
+            rx.fragment(),
         ),
-        class_name="block text-sm font-semibold text-gray-700 mb-1.5",
+        class_name="block text-sm font-semibold text-slate-800 mb-1.5 tracking-tight",
     )
 
 
@@ -46,7 +72,7 @@ def field_error(key: str) -> rx.Component:
         rx.el.p(
             rx.icon("circle-alert", class_name="h-3.5 w-3.5 mr-1 inline"),
             msg,
-            class_name="text-xs text-red-600 mt-1.5 flex items-center",
+            class_name="text-xs text-rose-700 mt-1.5 flex items-center font-medium",
         ),
         rx.fragment(),
     )
@@ -58,7 +84,7 @@ def text_input(name: str, placeholder: str, default: str = "") -> rx.Component:
         type="text",
         placeholder=placeholder,
         default_value=default,
-        class_name="w-full px-4 py-2.5 bg-white border border-stone-300 rounded-xl hover:border-stone-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200 text-stone-900 placeholder-stone-400 text-sm",
+        class_name=INPUT_CLS,
     )
 
 
@@ -77,11 +103,11 @@ def select_input(
                 default_value != "", default_value, "default"
             ),
             key=default_value,
-            class_name="w-full px-4 py-2.5 bg-white border border-stone-300 rounded-xl hover:border-stone-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200 text-stone-900 text-sm appearance-none cursor-pointer pr-10",
+            class_name="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl hover:border-indigo-300 focus:ring-2 focus:ring-indigo-900/15 focus:border-indigo-700 outline-none transition-all duration-200 text-slate-900 placeholder-slate-400 text-sm shadow-sm appearance-none cursor-pointer pr-10",
         ),
         rx.icon(
             "chevron-down",
-            class_name="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none",
+            class_name="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none",
         ),
         class_name="relative",
     )
@@ -95,7 +121,7 @@ def textarea_input(
         placeholder=placeholder,
         rows=rows,
         default_value=default,
-        class_name="w-full px-4 py-2.5 bg-white border border-stone-300 rounded-xl hover:border-stone-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all duration-200 text-stone-900 placeholder-stone-400 text-sm resize-none",
+        class_name=INPUT_CLS + " resize-none",
     )
 
 
@@ -115,8 +141,8 @@ def guidance_chip(item: tuple[str, str]) -> rx.Component:
         on_click=lambda: AppState.toggle_guidance(label),
         class_name=rx.cond(
             selected,
-            "flex items-center px-3.5 py-2 text-sm font-semibold rounded-xl border transition-all bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-100 scale-[1.01] active:scale-[0.99]",
-            "flex items-center px-3.5 py-2 text-sm font-medium rounded-xl border transition-all bg-white text-stone-700 border-stone-300 hover:border-blue-400 hover:text-blue-700 hover:bg-stone-50/50 active:scale-[0.99]",
+            "flex items-center px-3.5 py-2 text-sm font-semibold rounded-xl border transition-all bg-indigo-900 text-white border-indigo-900 shadow-sm shadow-indigo-100 ring-2 ring-indigo-300/30 active:scale-[0.99]",
+            "flex items-center px-3.5 py-2 text-sm font-medium rounded-xl border transition-all bg-white text-slate-700 border-slate-200 hover:border-indigo-300 hover:text-indigo-900 hover:bg-indigo-50/30 active:scale-[0.99]",
         ),
     )
 
@@ -127,51 +153,58 @@ def resume_section() -> rx.Component:
             "file-up",
             "Resume / CV",
             "Optional but highly recommended — helps your counsellor prep.",
+            "Module 06",
         ),
         rx.cond(
             AppState.resume_filename != "",
             rx.el.div(
                 rx.el.div(
-                    rx.icon("file-text", class_name="h-5 w-5 text-blue-600"),
-                    class_name="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0",
+                    rx.icon(
+                        "file-text",
+                        class_name="h-5 w-5 text-emerald-700",
+                    ),
+                    class_name="h-10 w-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0",
                 ),
                 rx.el.div(
                     rx.el.p(
                         AppState.resume_filename,
-                        class_name="text-sm font-semibold text-gray-900 truncate",
+                        class_name="text-sm font-semibold text-slate-900 truncate",
                     ),
                     rx.el.p(
                         AppState.resume_size_label,
-                        class_name="text-xs text-gray-500 mt-0.5",
+                        class_name="text-xs text-slate-500 mt-0.5",
                     ),
-                    class_name="flex-1 min-w-0",
+                    class_name="flex-1 min-w-0 ml-3",
                 ),
                 rx.el.div(
-                    rx.icon("circle-check", class_name="h-4 w-4 mr-1"),
+                    rx.icon("circle-check", class_name="h-3.5 w-3.5 mr-1"),
                     "Uploaded",
-                    class_name="flex items-center text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full",
+                    class_name="flex items-center text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-full",
                 ),
                 rx.el.button(
                     rx.icon("x", class_name="h-4 w-4"),
                     type="button",
                     on_click=AppState.clear_resume,
-                    class_name="ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all",
+                    class_name="ml-2 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all",
                 ),
-                class_name="flex items-center gap-3 p-4 bg-blue-50/40 border border-blue-200 rounded-xl",
+                class_name="flex items-center gap-1 p-4 bg-emerald-50/30 border border-emerald-200/70 rounded-xl",
             ),
             rx.upload.root(
                 rx.el.div(
-                    rx.icon(
-                        "cloud-upload",
-                        class_name="h-9 w-9 text-blue-500 mb-2",
+                    rx.el.div(
+                        rx.icon(
+                            "cloud-upload",
+                            class_name="h-6 w-6 text-indigo-900",
+                        ),
+                        class_name="h-12 w-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-3",
                     ),
                     rx.el.p(
                         "Drop your resume or click to browse",
-                        class_name="text-sm font-semibold text-gray-800",
+                        class_name="text-sm font-semibold text-slate-800",
                     ),
                     rx.el.p(
                         "PDF, DOC, or DOCX • up to 5 MB",
-                        class_name="text-xs text-gray-500 mt-1",
+                        class_name="text-xs text-slate-500 mt-1",
                     ),
                     class_name="flex flex-col items-center justify-center py-8 px-4 text-center",
                 ),
@@ -189,7 +222,7 @@ def resume_section() -> rx.Component:
                 on_drop=AppState.handle_resume_upload(
                     rx.upload_files(upload_id=UPLOAD_ID)
                 ),
-                class_name="border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer",
+                class_name="border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/40 hover:border-indigo-400 hover:bg-indigo-50/20 transition-all cursor-pointer",
             ),
         ),
         rx.cond(
@@ -197,11 +230,11 @@ def resume_section() -> rx.Component:
             rx.el.p(
                 rx.icon("circle-alert", class_name="h-3.5 w-3.5 mr-1 inline"),
                 AppState.resume_error,
-                class_name="text-xs text-red-600 mt-2 flex items-center",
+                class_name="text-xs text-rose-700 mt-2 flex items-center font-medium",
             ),
             rx.fragment(),
         ),
-        class_name="bg-white rounded-2xl border border-gray-200 p-6",
+        class_name="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm",
     )
 
 
@@ -213,6 +246,7 @@ def intake_form() -> rx.Component:
                 "briefcase",
                 "Your current situation",
                 "Where are you right now?",
+                "Module 01",
             ),
             rx.el.div(
                 field_label("Current role / status"),
@@ -241,12 +275,15 @@ def intake_form() -> rx.Component:
                 field_error("experience_level"),
                 class_name="mb-4",
             ),
-            class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+            class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
         # Education
         rx.el.div(
             section_header(
-                "graduation-cap", "Education", "Tell us about your background."
+                "graduation-cap",
+                "Education",
+                "Tell us about your background.",
+                "Module 02",
             ),
             rx.el.div(
                 field_label("Highest qualification", required=True),
@@ -284,7 +321,7 @@ def intake_form() -> rx.Component:
                 ),
                 class_name="grid grid-cols-1 sm:grid-cols-2 gap-4",
             ),
-            class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+            class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
         # Skills & interests
         rx.el.div(
@@ -292,6 +329,7 @@ def intake_form() -> rx.Component:
                 "sparkles",
                 "Skills & interests",
                 "What you bring and what you love.",
+                "Module 03",
             ),
             rx.el.div(
                 field_label("Top skills", required=True),
@@ -302,7 +340,7 @@ def intake_form() -> rx.Component:
                 ),
                 rx.el.p(
                     "Separate skills with commas.",
-                    class_name="text-xs text-gray-500 mt-1.5",
+                    class_name="text-xs text-slate-500 mt-1.5",
                 ),
                 field_error("skills"),
                 class_name="mb-4",
@@ -316,11 +354,11 @@ def intake_form() -> rx.Component:
                 ),
                 rx.el.p(
                     "Separate interests with commas.",
-                    class_name="text-xs text-gray-500 mt-1.5",
+                    class_name="text-xs text-slate-500 mt-1.5",
                 ),
                 class_name="",
             ),
-            class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+            class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
         # Targets & challenges
         rx.el.div(
@@ -328,6 +366,7 @@ def intake_form() -> rx.Component:
                 "target",
                 "Goals & challenges",
                 "Where you want to go and what's in the way.",
+                "Module 04",
             ),
             rx.el.div(
                 field_label("Target roles or industries", required=True),
@@ -338,7 +377,7 @@ def intake_form() -> rx.Component:
                 ),
                 rx.el.p(
                     "Separate with commas.",
-                    class_name="text-xs text-gray-500 mt-1.5",
+                    class_name="text-xs text-slate-500 mt-1.5",
                 ),
                 field_error("target_roles"),
                 class_name="mb-4",
@@ -353,7 +392,7 @@ def intake_form() -> rx.Component:
                 ),
                 class_name="",
             ),
-            class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+            class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
         # Guidance areas
         rx.el.div(
@@ -361,13 +400,14 @@ def intake_form() -> rx.Component:
                 "compass",
                 "Where do you want guidance?",
                 "Pick all that apply — your counsellor will focus here.",
+                "Module 05",
             ),
             rx.el.div(
                 rx.foreach(GUIDANCE_OPTIONS, guidance_chip),
                 class_name="flex flex-wrap gap-2",
             ),
             field_error("guidance_areas"),
-            class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+            class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
         # Career objective
         rx.el.div(
@@ -375,6 +415,7 @@ def intake_form() -> rx.Component:
                 "flag",
                 "Career objective",
                 "A short statement of where you want to be.",
+                "Module 07",
             ),
             rx.el.div(
                 field_label("In a few sentences…", required=True),
@@ -387,7 +428,7 @@ def intake_form() -> rx.Component:
                 field_error("career_objective"),
                 class_name="",
             ),
-            class_name="bg-white rounded-2xl border border-gray-200 p-6 mb-5",
+            class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
         # Resume
         resume_section(),
@@ -398,13 +439,14 @@ def intake_form() -> rx.Component:
                 "Reset",
                 type="button",
                 on_click=AppState.reset_intake,
-                class_name="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-stone-700 bg-white border border-stone-300 rounded-xl hover:bg-stone-50 hover:border-stone-400 active:scale-[0.99] transition-all duration-200 focus:ring-2 focus:ring-stone-500/10 focus:outline-none",
+                class_name="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-slate-400 active:scale-[0.99] transition-all duration-200 focus:ring-2 focus:ring-slate-300/30 focus:outline-none",
             ),
             rx.el.button(
+                rx.icon("save", class_name="h-4 w-4 mr-2"),
                 "Save & review",
                 rx.icon("arrow-right", class_name="h-4 w-4 ml-2"),
                 type="submit",
-                class_name="flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.99] rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:ring-2 focus:ring-blue-500/20 focus:outline-none",
+                class_name="flex-1 flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-indigo-900 hover:bg-indigo-950 active:scale-[0.99] rounded-xl transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-indigo-100 focus:ring-2 focus:ring-indigo-300/50 focus:outline-none",
             ),
             class_name="flex flex-col sm:flex-row gap-3 mt-6",
         ),
@@ -420,25 +462,32 @@ def intake_placeholder() -> rx.Component:
                 rx.icon("arrow-left", class_name="h-4 w-4 mr-1.5"),
                 "Back",
                 on_click=AppState.go_to_landing,
-                class_name="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-6",
+                class_name="flex items-center text-sm font-semibold text-slate-600 hover:text-indigo-900 mb-6 transition-colors",
             ),
             rx.el.div(
                 rx.el.div(
+                    rx.el.span(
+                        "MODULE 02 • GUIDED INTAKE",
+                        class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
+                    ),
+                    class_name="mb-3",
+                ),
+                rx.el.div(
                     rx.icon(
                         "clipboard-list",
-                        class_name="h-5 w-5 text-blue-600",
+                        class_name="h-5 w-5 text-indigo-900",
                     ),
-                    class_name="h-11 w-11 rounded-xl bg-blue-50 flex items-center justify-center mb-4",
+                    class_name="h-11 w-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-4",
                 ),
                 rx.el.h1(
                     "Hi ",
                     AppState.first_name,
                     " — let's understand your goals",
-                    class_name="text-2xl sm:text-3xl font-bold text-gray-900",
+                    class_name="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight",
                 ),
                 rx.el.p(
                     "Take a few minutes to share your background. The more we know, the more tailored your session will be.",
-                    class_name="text-sm text-gray-600 mt-2",
+                    class_name="text-sm text-slate-600 mt-2 max-w-2xl",
                 ),
                 class_name="mb-6",
             ),

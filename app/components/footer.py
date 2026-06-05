@@ -6,20 +6,23 @@ def footer() -> rx.Component:
         rx.el.div(
             rx.el.div(
                 rx.el.div(
-                    rx.icon("compass", class_name="h-4 w-4 text-indigo-500"),
+                    rx.icon(
+                        "graduation-cap",
+                        class_name="h-4 w-4 text-indigo-900",
+                    ),
                     rx.el.span(
-                        "Pathwise",
-                        class_name="text-sm font-extrabold text-stone-900 tracking-tight bg-gradient-to-r from-indigo-600 to-rose-500 bg-clip-text text-transparent",
+                        "Pathwise Advisory",
+                        class_name="text-sm font-bold text-slate-900 tracking-tight",
                     ),
                     class_name="flex items-center gap-2",
                 ),
                 rx.el.p(
-                    "© 2025 Pathwise Career Counselling. Muted multi-accent styling with soft cloud persistence.",
-                    class_name="text-xs text-stone-500 font-medium",
+                    "© 2025 Pathwise Academy. Scholarly & professional development advisory. Muted local persistence.",
+                    class_name="text-xs text-slate-500 font-medium",
                 ),
                 class_name="flex flex-col sm:flex-row items-center justify-between gap-3",
             ),
             class_name="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6",
         ),
-        class_name="bg-white/90 border-t border-stone-200/60 mt-auto",
+        class_name="bg-white/95 border-t border-slate-200/80 mt-auto",
     )
