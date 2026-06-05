@@ -636,21 +636,41 @@ def landing() -> rx.Component:
                         ),
                         class_name="inline-flex items-center bg-white/80 border border-indigo-100/80 px-3.5 py-1.5 rounded-full mb-4 shadow-sm",
                     ),
-                    # Featured Highlight Offer Banner
+                    # Prominent Hero Announcement Banner (High Contrast, Responsive, Pulsing Animation)
                     rx.el.div(
-                        rx.icon(
-                            "sparkles",
-                            class_name="h-4 w-4 text-indigo-900 animate-pulse-gentle shrink-0",
+                        rx.el.div(
+                            rx.el.div(
+                                rx.icon(
+                                    "gift",
+                                    class_name="h-4 w-4 text-emerald-700 animate-bounce",
+                                ),
+                                rx.el.span(
+                                    "FREE GIFT",
+                                    class_name="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-emerald-800",
+                                ),
+                                class_name="inline-flex items-center gap-1.5 bg-emerald-100/90 px-3 py-1 rounded-full border border-emerald-300 shadow-sm shrink-0",
+                            ),
+                            rx.el.div(
+                                rx.el.span(
+                                    "Limited Time Benefit:",
+                                    class_name="text-xs sm:text-sm font-bold text-indigo-900 uppercase tracking-wider block sm:inline",
+                                ),
+                                rx.el.span(
+                                    "Free 30 mins Discovery Session with Industry Expert",
+                                    class_name="text-sm sm:text-base md:text-lg font-black text-slate-900 ml-0 sm:ml-2 mt-1 sm:mt-0 block sm:inline leading-tight tracking-tight",
+                                ),
+                                class_name="flex-1 text-center sm:text-left",
+                            ),
+                            class_name="flex flex-col sm:flex-row items-center gap-3 w-full",
                         ),
-                        rx.el.span(
-                            "Limited Time Offer:",
-                            class_name="text-[11px] font-extrabold uppercase tracking-wider text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded mr-2",
+                        rx.el.div(
+                            rx.icon(
+                                "sparkles",
+                                class_name="h-5 w-5 text-indigo-900 animate-pulse-gentle hidden md:block shrink-0",
+                            ),
+                            class_name="shrink-0",
                         ),
-                        rx.el.span(
-                            "Free 30 mins Discovery Session with Industry Expert",
-                            class_name="text-xs font-semibold text-slate-800",
-                        ),
-                        class_name="inline-flex items-center bg-gradient-to-r from-amber-50 to-indigo-50 border border-indigo-200 px-4 py-2 rounded-2xl mb-6 shadow-sm animate-fade-in-up",
+                        class_name="w-full max-w-4xl mx-auto flex items-center justify-between bg-gradient-to-r from-amber-50 via-indigo-50 to-emerald-50 border-2 border-indigo-400 p-4 sm:p-5 md:p-6 rounded-3xl mb-8 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-pulse-gentle relative overflow-hidden ring-4 ring-indigo-200/50",
                     ),
                     rx.el.h1(
                         "Learn the path. ",
@@ -664,17 +684,27 @@ def landing() -> rx.Component:
                         "A scholarly, mentor-led approach to career guidance. We pair you with vetted counsellors and a structured curriculum so you don't just plan a career — you build the discipline to thrive in it.",
                         class_name="text-sm sm:text-base text-slate-600 mt-6 max-w-2xl mx-auto leading-relaxed",
                     ),
-                    # Highlighting the same offer next to calls-to-action
+                    # Highlighting the same offer next to calls-to-action as a strong CTA strip
                     rx.el.div(
-                        rx.el.p(
-                            rx.icon(
-                                "gift",
-                                class_name="h-3.5 w-3.5 text-emerald-600 mr-1.5 inline",
+                        rx.el.div(
+                            rx.el.div(
+                                rx.icon(
+                                    "gift",
+                                    class_name="h-4 w-4 text-emerald-700 mr-2 animate-bounce",
+                                ),
+                                rx.el.span(
+                                    "GUARANTEED COMPLIMENTARY OFFER",
+                                    class_name="text-[10px] font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md mr-3 shrink-0",
+                                ),
+                                rx.el.span(
+                                    "Free 30 mins Discovery Session with Industry Expert is instantly credited upon signup",
+                                    class_name="text-xs sm:text-sm font-extrabold text-slate-900 tracking-tight",
+                                ),
+                                class_name="flex flex-col sm:flex-row items-center justify-center text-center gap-2 sm:gap-0 p-3.5 bg-gradient-to-r from-emerald-50/90 via-white to-emerald-50/90 border border-emerald-300/80 rounded-2xl shadow-sm",
                             ),
-                            "Includes Free 30 mins Discovery Session with Industry Expert",
-                            class_name="text-[11px] font-bold text-emerald-800 bg-emerald-50/70 border border-emerald-200/50 px-3 py-1 rounded-full w-fit mx-auto",
+                            class_name="max-w-2xl mx-auto w-full",
                         ),
-                        class_name="mt-6 flex justify-center",
+                        class_name="mt-8 flex justify-center w-full px-4",
                     ),
                     rx.el.div(
                         rx.el.button(
