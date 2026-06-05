@@ -3,19 +3,51 @@ from app.states.app_state import AppState
 
 
 def feature_card(
-    icon: str, title: str, desc: str, step_num: str = ""
+    icon: str,
+    title: str,
+    desc: str,
+    step_num: str = "",
+    accent_color: str = "indigo",
 ) -> rx.Component:
+    icon_color = rx.match(
+        accent_color,
+        ("emerald", "text-emerald-700"),
+        ("amber", "text-amber-700"),
+        ("rose", "text-rose-700"),
+        "text-indigo-900",
+    )
+    bg_color = rx.match(
+        accent_color,
+        ("emerald", "bg-emerald-50 border-emerald-100"),
+        ("amber", "bg-amber-50 border-amber-100"),
+        ("rose", "bg-rose-50 border-rose-100"),
+        "bg-indigo-50 border-indigo-100",
+    )
+    badge_color = rx.match(
+        accent_color,
+        ("emerald", "text-emerald-700 bg-emerald-50/70 border-emerald-100"),
+        ("amber", "text-amber-700 bg-amber-50/70 border-amber-100"),
+        ("rose", "text-rose-700 bg-rose-50/70 border-rose-100"),
+        "text-indigo-700 bg-indigo-50/60 border-indigo-100",
+    )
+    hover_color = rx.match(
+        accent_color,
+        ("emerald", "hover:border-emerald-300"),
+        ("amber", "hover:border-amber-300"),
+        ("rose", "hover:border-rose-300"),
+        "hover:border-indigo-200",
+    )
     return rx.el.div(
         rx.el.div(
             rx.el.div(
-                rx.icon(icon, class_name="h-5 w-5 text-indigo-900"),
-                class_name="h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100/80",
+                rx.icon(icon, class_name=f"h-5 w-5 {icon_color}"),
+                class_name=f"h-11 w-11 rounded-2xl flex items-center justify-center border {bg_color}",
             ),
             rx.cond(
                 step_num != "",
                 rx.el.span(
                     step_num,
-                    class_name="text-[10px] font-bold uppercase tracking-widest text-indigo-700 bg-indigo-50/60 border border-indigo-100 px-2.5 py-1 rounded-full",
+                    class_name=f"text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border {badge_color}",
                 ),
                 rx.fragment(),
             ),
@@ -25,7 +57,7 @@ def feature_card(
             title, class_name="text-base font-semibold text-slate-900 mb-2"
         ),
         rx.el.p(desc, class_name="text-xs text-slate-600 leading-relaxed"),
-        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-200 hover:shadow-sm transition-all duration-300",
+        class_name=f"bg-white rounded-2xl border border-slate-200/70 p-6 hover:shadow-md transition-all duration-300 {hover_color}",
     )
 
 
@@ -855,7 +887,7 @@ def landing() -> rx.Component:
                         class_name="text-2xl sm:text-3xl font-bold text-slate-900 mt-2",
                     ),
                     rx.el.p(
-                        "Three guided modules — designed by educators, refined by counsellors.",
+                        "Seven cohesive milestones — an academic, step-by-step career readiness journey designed by educators and domain experts.",
                         class_name="text-sm text-slate-600 mt-3 max-w-2xl mx-auto",
                     ),
                     class_name="text-center mb-10",
@@ -866,20 +898,51 @@ def landing() -> rx.Component:
                         "Register your profile",
                         "Tell us who you are and where you are in your career — takes under a minute and helps us pre-match a counsellor.",
                         "Module 01",
+                        "indigo",
                     ),
                     feature_card(
                         "clipboard-list",
                         "Complete a guided intake",
                         "Walk through a structured questionnaire on goals, skills, and challenges. Your answers shape your personalized session.",
                         "Module 02",
+                        "indigo",
                     ),
                     feature_card(
                         "calendar-check",
                         "Meet your counsellor 1:1",
                         "Pick a slot, join a focused video session, and walk away with a written action plan you can start that same week.",
                         "Module 03",
+                        "indigo",
                     ),
-                    class_name="grid grid-cols-1 md:grid-cols-3 gap-6",
+                    feature_card(
+                        "bar-chart-3",
+                        "Comprehensive Assessment Plan",
+                        "Receive an exhaustive diagnostic evaluation of your technical skills, soft skill capabilities, and target academic readiness metrics.",
+                        "Module 04",
+                        "emerald",
+                    ),
+                    feature_card(
+                        "book-open",
+                        "Grooming & Upskilling Period",
+                        "Engage in a 3–9 month structured roadmap tailored to your specific readiness levels, featuring deep skill building and mentoring reviews.",
+                        "Module 05",
+                        "amber",
+                    ),
+                    feature_card(
+                        "send",
+                        "Interview Lineup",
+                        "Gain exclusive fast-track entries, direct applications, and live calibration mocks with top-tier partnered companies and universities.",
+                        "Module 06",
+                        "rose",
+                    ),
+                    feature_card(
+                        "trophy",
+                        "Final Selection & Alumni Network",
+                        "Transition smoothly into your dream offer, secure final advisory reviews, and secure lifelong integration within our expert alumni community.",
+                        "Module 07",
+                        "emerald",
+                    ),
+                    class_name="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
                 ),
                 class_name="max-w-6xl mx-auto",
                 id="how",
