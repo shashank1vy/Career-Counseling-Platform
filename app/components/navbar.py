@@ -11,13 +11,13 @@ def step_indicator(label: str, step_key: str, num: int) -> rx.Component:
                 is_done,
                 rx.icon(
                     "check",
-                    class_name="h-3.5 w-3.5 text-white",
+                    class_name="h-3.5 w-3.5 text-white animate-fade-in-up",
                 ),
                 rx.el.span(num, class_name="text-xs font-bold"),
             ),
             class_name=rx.cond(
                 is_active,
-                "h-7 w-7 rounded-full bg-indigo-900 text-white flex items-center justify-center ring-4 ring-indigo-100 transition-all duration-300 shadow-sm",
+                "h-7 w-7 rounded-full bg-indigo-900 text-white flex items-center justify-center ring-4 ring-indigo-100 transition-all duration-300 shadow-sm scale-110",
                 rx.cond(
                     is_done,
                     "h-7 w-7 rounded-full bg-emerald-600 text-white flex items-center justify-center transition-all duration-300 shadow-sm",
@@ -33,7 +33,7 @@ def step_indicator(label: str, step_key: str, num: int) -> rx.Component:
                 "text-xs font-semibold text-slate-500 ml-2 hidden sm:inline transition-colors",
             ),
         ),
-        class_name="flex items-center",
+        class_name="flex items-center transition-academic hover:scale-105",
     )
 
 
@@ -117,7 +117,7 @@ def navbar() -> rx.Component:
             AppState.current_step != "landing",
             rx.el.div(
                 rx.el.div(
-                    class_name="h-full bg-gradient-to-r from-indigo-900 via-indigo-700 to-emerald-600 transition-all duration-500 ease-out",
+                    class_name="h-full bg-gradient-to-r from-indigo-900 via-indigo-700 to-emerald-600 transition-all duration-500 ease-out animate-progress-grow",
                     style={"width": f"{AppState.progress_percent}%"},
                 ),
                 class_name="h-1 bg-slate-100 w-full",

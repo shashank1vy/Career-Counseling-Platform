@@ -141,8 +141,8 @@ def guidance_chip(item: tuple[str, str]) -> rx.Component:
         on_click=lambda: AppState.toggle_guidance(label),
         class_name=rx.cond(
             selected,
-            "flex items-center px-3.5 py-2 text-sm font-semibold rounded-xl border transition-all bg-indigo-900 text-white border-indigo-900 shadow-sm shadow-indigo-100 ring-2 ring-indigo-300/30 active:scale-[0.99]",
-            "flex items-center px-3.5 py-2 text-sm font-medium rounded-xl border transition-all bg-white text-slate-700 border-slate-200 hover:border-indigo-300 hover:text-indigo-900 hover:bg-indigo-50/30 active:scale-[0.99]",
+            "flex items-center px-3.5 py-2 text-sm font-semibold rounded-xl border bg-indigo-900 text-white border-indigo-900 shadow-md shadow-indigo-100 ring-2 ring-indigo-300/40 scale-105 active:scale-95 transition-academic",
+            "flex items-center px-3.5 py-2 text-sm font-medium rounded-xl border bg-white text-slate-700 border-slate-200 hover:border-indigo-300 hover:text-indigo-900 hover:bg-indigo-50/30 hover:scale-102 active:scale-95 transition-academic",
         ),
     )
 

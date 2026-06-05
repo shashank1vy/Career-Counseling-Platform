@@ -123,8 +123,8 @@ def session_card(s: dict) -> rx.Component:
         on_click=lambda: AppState.select_session_type(s["value"]),
         class_name=rx.cond(
             selected,
-            "block w-full text-left p-4 rounded-2xl border-2 border-indigo-900 bg-indigo-50/30 shadow-md shadow-indigo-100 transition-all duration-200 ring-2 ring-indigo-200/40 scale-[1.01]",
-            "block w-full text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50/40 hover:shadow-sm active:scale-[0.99] transition-all duration-200",
+            "block w-full text-left p-4 rounded-2xl border-2 border-indigo-900 bg-indigo-50/30 shadow-md shadow-indigo-100 ring-2 ring-indigo-200/40 scale-[1.02] transition-academic animate-pulse-gentle",
+            "block w-full text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-academic",
         ),
     )
 

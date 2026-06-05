@@ -32,10 +32,10 @@ def feature_card(
     )
     hover_color = rx.match(
         accent_color,
-        ("emerald", "hover:border-emerald-300"),
-        ("amber", "hover:border-amber-300"),
-        ("rose", "hover:border-rose-300"),
-        "hover:border-indigo-200",
+        ("emerald", "hover:border-emerald-300 hover:shadow-emerald-50"),
+        ("amber", "hover:border-amber-300 hover:shadow-amber-50"),
+        ("rose", "hover:border-rose-300 hover:shadow-rose-50"),
+        "hover:border-indigo-300 hover:shadow-indigo-50",
     )
     return rx.el.div(
         rx.el.div(
@@ -57,7 +57,7 @@ def feature_card(
             title, class_name="text-base font-semibold text-slate-900 mb-2"
         ),
         rx.el.p(desc, class_name="text-xs text-slate-600 leading-relaxed"),
-        class_name=f"bg-white rounded-2xl border border-slate-200/70 p-6 hover:shadow-md transition-all duration-300 {hover_color}",
+        class_name=f"bg-white rounded-2xl border border-slate-200/70 p-6 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-academic animate-fade-in-up {hover_color}",
     )
 
 
@@ -97,7 +97,7 @@ def benefit_card(
             title, class_name="text-base font-semibold text-slate-900 mb-2"
         ),
         rx.el.p(desc, class_name="text-xs text-slate-600 leading-relaxed"),
-        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-200 hover:shadow-sm transition-all duration-300 h-full",
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:border-indigo-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-academic animate-fade-in-up h-full",
     )
 
 
@@ -368,8 +368,8 @@ def filter_tab(label: str, key_val: str) -> rx.Component:
         type="button",
         class_name=rx.cond(
             is_selected,
-            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-indigo-900 text-white shadow-sm scale-[1.02]",
-            "px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all text-slate-600 bg-white border border-slate-200/70 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300",
+            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-academic bg-indigo-900 text-white shadow-md scale-105 ring-2 ring-indigo-200",
+            "px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-academic text-slate-600 bg-white border border-slate-200/70 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 hover:scale-102 active:scale-95",
         ),
     )
 
@@ -380,17 +380,17 @@ def career_path_card(path: dict[str, str]) -> rx.Component:
         theme_color,
         (
             "blue",
-            "h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0",
+            "h-11 w-11 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0 transition-academic group-hover:scale-110",
         ),
         (
             "rose",
-            "h-11 w-11 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shrink-0",
+            "h-11 w-11 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shrink-0 transition-academic group-hover:scale-110",
         ),
         (
             "sage",
-            "h-11 w-11 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0",
+            "h-11 w-11 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0 transition-academic group-hover:scale-110",
         ),
-        "h-11 w-11 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100 shrink-0",
+        "h-11 w-11 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100 shrink-0 transition-academic group-hover:scale-110",
     )
     icon_color = rx.match(
         theme_color,
@@ -403,29 +403,29 @@ def career_path_card(path: dict[str, str]) -> rx.Component:
         path["trend_key"],
         (
             "hot",
-            "text-[11px] font-bold text-rose-800 bg-rose-50 border border-rose-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1",
+            "text-[11px] font-bold text-rose-800 bg-rose-50 border border-rose-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1 animate-pulse-gentle",
         ),
         (
             "rising",
-            "text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1",
+            "text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1 animate-pulse-gentle",
         ),
-        "text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1",
+        "text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-2.5 py-1 rounded-full w-fit flex items-center gap-1 animate-pulse-gentle",
     )
     role_chip = rx.match(
         theme_color,
         (
             "blue",
-            "text-xs font-semibold text-indigo-900 bg-indigo-50/70 border border-indigo-100/70 px-2.5 py-1 rounded-xl",
+            "text-xs font-semibold text-indigo-900 bg-indigo-50/70 border border-indigo-100/70 px-2.5 py-1 rounded-xl transition-all hover:bg-indigo-100",
         ),
         (
             "rose",
-            "text-xs font-semibold text-rose-800 bg-rose-50/70 border border-rose-100/70 px-2.5 py-1 rounded-xl",
+            "text-xs font-semibold text-rose-800 bg-rose-50/70 border border-rose-100/70 px-2.5 py-1 rounded-xl transition-all hover:bg-rose-100",
         ),
         (
             "sage",
-            "text-xs font-semibold text-emerald-800 bg-emerald-50/70 border border-emerald-100/70 px-2.5 py-1 rounded-xl",
+            "text-xs font-semibold text-emerald-800 bg-emerald-50/70 border border-emerald-100/70 px-2.5 py-1 rounded-xl transition-all hover:bg-emerald-100",
         ),
-        "text-xs font-semibold text-amber-800 bg-amber-50/70 border border-amber-100/70 px-2.5 py-1 rounded-xl",
+        "text-xs font-semibold text-amber-800 bg-amber-50/70 border border-amber-100/70 px-2.5 py-1 rounded-xl transition-all hover:bg-amber-100",
     )
     return rx.el.div(
         rx.el.div(
@@ -440,7 +440,7 @@ def career_path_card(path: dict[str, str]) -> rx.Component:
             rx.el.div(
                 rx.el.h3(
                     path["title"],
-                    class_name="text-base font-bold text-slate-900",
+                    class_name="text-base font-bold text-slate-900 group-hover:text-indigo-900 transition-colors",
                 ),
                 rx.el.p(
                     path["desc"],
@@ -522,11 +522,14 @@ def career_path_card(path: dict[str, str]) -> rx.Component:
         # CTA
         rx.el.button(
             "Get guided in this path",
-            rx.icon("arrow-right", class_name="h-3.5 w-3.5 ml-1.5"),
+            rx.icon(
+                "arrow-right",
+                class_name="h-3.5 w-3.5 ml-1.5 transition-academic group-hover:translate-x-1",
+            ),
             on_click=lambda: AppState.go_to_register(""),
             class_name="mt-5 flex items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
         ),
-        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:shadow-md hover:border-indigo-200 transition-all duration-300 flex flex-col justify-between",
+        class_name="bg-white rounded-2xl border border-slate-200/70 p-6 hover:shadow-lg hover:border-indigo-300 hover:-translate-y-0.5 active:scale-[0.99] transition-academic flex flex-col justify-between group animate-fade-in-up",
     )
 
 
