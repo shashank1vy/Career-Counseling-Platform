@@ -10,7 +10,170 @@ INPUT_CLS = (
     "text-slate-900 placeholder-slate-400 text-sm shadow-sm"
 )
 
+
+def signup_summary_card() -> rx.Component:
+    return rx.el.div(
+        rx.el.div(
+            rx.el.div(
+                rx.el.div(
+                    rx.icon(
+                        "circle-user",
+                        class_name="h-3.5 w-3.5 text-emerald-700",
+                    ),
+                    class_name="h-7 w-7 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center",
+                ),
+                rx.el.div(
+                    rx.el.h3(
+                        "Carried over from signup",
+                        class_name="text-sm font-semibold text-slate-900 tracking-tight",
+                    ),
+                    rx.el.p(
+                        "We're reusing what you already shared — no need to retype.",
+                        class_name="text-[11px] text-slate-500 mt-0.5",
+                    ),
+                    class_name="ml-2",
+                ),
+                class_name="flex items-center",
+            ),
+            rx.el.button(
+                rx.icon("pencil", class_name="h-3.5 w-3.5 mr-1"),
+                "Edit signup",
+                type="button",
+                on_click=lambda: AppState.go_to_register(""),
+                class_name="flex items-center text-xs font-bold text-indigo-900 hover:text-indigo-950 transition-colors",
+            ),
+            class_name="flex items-center justify-between mb-4 pb-3 border-b border-slate-100",
+        ),
+        rx.el.div(
+            rx.el.div(
+                rx.el.p(
+                    "Full name",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
+                ),
+                rx.el.p(
+                    AppState.full_name,
+                    class_name="text-sm font-semibold text-slate-900 mt-1",
+                ),
+            ),
+            rx.el.div(
+                rx.el.p(
+                    "Email",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
+                ),
+                rx.el.p(
+                    AppState.email,
+                    class_name="text-sm text-slate-900 mt-1 font-medium truncate",
+                ),
+            ),
+            rx.el.div(
+                rx.el.p(
+                    "Phone",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
+                ),
+                rx.el.p(
+                    AppState.phone,
+                    class_name="text-sm text-slate-900 mt-1 font-medium",
+                ),
+            ),
+            rx.el.div(
+                rx.el.p(
+                    "Stage",
+                    class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
+                ),
+                rx.el.p(
+                    AppState.stage_label,
+                    class_name="text-sm text-slate-900 mt-1 font-medium",
+                ),
+            ),
+            class_name="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4",
+        ),
+        rx.el.div(
+            rx.icon(
+                "lock",
+                class_name="h-3 w-3 text-slate-400 mr-1.5",
+            ),
+            rx.el.span(
+                "These details flow automatically into your review and booking confirmation.",
+                class_name="text-[11px] text-slate-500 font-medium",
+            ),
+            class_name="flex items-center mt-4 pt-3 border-t border-slate-100",
+        ),
+        class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm mb-5",
+    )
+
+
+def resume_first_banner() -> rx.Component:
+    return rx.el.div(
+        rx.el.div(
+            rx.el.div(
+                rx.icon(
+                    "sparkles",
+                    class_name="h-5 w-5 text-amber-700",
+                ),
+                class_name="h-11 w-11 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0",
+            ),
+            rx.el.div(
+                rx.el.div(
+                    rx.el.span(
+                        "FAST PATH",
+                        class_name="text-[10px] font-bold uppercase tracking-widest text-amber-800 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full",
+                    ),
+                    class_name="mb-2",
+                ),
+                rx.el.h3(
+                    "Upload your resume to skip ahead",
+                    class_name="text-base font-bold text-slate-900 tracking-tight",
+                ),
+                rx.el.p(
+                    "Your resume already contains most of your education, experience, and skills. Upload it once and your counsellor will use it to pre-fill and verify the rest of this intake — you'll only need to confirm or tweak.",
+                    class_name="text-xs text-slate-600 mt-1.5 leading-relaxed",
+                ),
+                rx.el.div(
+                    rx.el.div(
+                        rx.icon(
+                            "graduation-cap",
+                            class_name="h-3 w-3 text-amber-700 mr-1",
+                        ),
+                        rx.el.span(
+                            "Education auto-mapped",
+                            class_name="text-[11px] font-semibold text-slate-700",
+                        ),
+                        class_name="flex items-center bg-white border border-amber-100 px-2.5 py-1 rounded-full",
+                    ),
+                    rx.el.div(
+                        rx.icon(
+                            "briefcase",
+                            class_name="h-3 w-3 text-amber-700 mr-1",
+                        ),
+                        rx.el.span(
+                            "Experience extracted",
+                            class_name="text-[11px] font-semibold text-slate-700",
+                        ),
+                        class_name="flex items-center bg-white border border-amber-100 px-2.5 py-1 rounded-full",
+                    ),
+                    rx.el.div(
+                        rx.icon(
+                            "sparkles",
+                            class_name="h-3 w-3 text-amber-700 mr-1",
+                        ),
+                        rx.el.span(
+                            "Skills suggested",
+                            class_name="text-[11px] font-semibold text-slate-700",
+                        ),
+                        class_name="flex items-center bg-white border border-amber-100 px-2.5 py-1 rounded-full",
+                    ),
+                    class_name="flex flex-wrap gap-2 mt-3",
+                ),
+                class_name="ml-4 flex-1",
+            ),
+            class_name="flex items-start",
+        ),
+        class_name="bg-gradient-to-br from-amber-50/60 via-white to-white rounded-2xl border border-amber-100 p-5 mb-5",
+    )
+
+
 GUIDANCE_OPTIONS = [
+    ("Upskill on technology", "cpu"),
     ("Resume review", "file-text"),
     ("Interview prep", "messages-square"),
     ("Career switch", "shuffle"),
@@ -19,6 +182,17 @@ GUIDANCE_OPTIONS = [
     ("LinkedIn profile", "linkedin"),
     ("Job search strategy", "search"),
     ("Networking", "users"),
+    ("Higher studies planning", "graduation-cap"),
+    ("Portfolio building", "folder-kanban"),
+    ("Personal branding", "sparkles"),
+    ("Mock interviews", "mic"),
+    ("Mentorship matching", "users-round"),
+    ("Certification guidance", "award"),
+    ("Public speaking", "megaphone"),
+    ("Leadership coaching", "crown"),
+    ("Freelance / consulting", "briefcase-business"),
+    ("Entrepreneurship", "rocket"),
+    ("Work-life balance", "heart-handshake"),
 ]
 
 
@@ -153,7 +327,7 @@ def resume_section() -> rx.Component:
             "file-up",
             "Resume / CV",
             "Optional but highly recommended — helps your counsellor prep.",
-            "Module 06",
+            "Step 06",
         ),
         rx.cond(
             AppState.resume_filename != "",
@@ -240,13 +414,18 @@ def resume_section() -> rx.Component:
 
 def intake_form() -> rx.Component:
     return rx.el.form(
+        # Resume upload first — fast path
+        rx.el.div(
+            resume_section(),
+            class_name="mb-5",
+        ),
         # Current role
         rx.el.div(
             section_header(
                 "briefcase",
                 "Your current situation",
-                "Where are you right now?",
-                "Module 01",
+                "Confirm or refine — your resume helps us pre-fill this.",
+                "Step 01",
             ),
             rx.el.div(
                 field_label("Current role / status"),
@@ -282,8 +461,38 @@ def intake_form() -> rx.Component:
             section_header(
                 "graduation-cap",
                 "Education",
-                "Tell us about your background.",
-                "Module 02",
+                "Pulled from your resume when available — review and tweak.",
+                "Step 02",
+            ),
+            rx.cond(
+                AppState.resume_filename != "",
+                rx.el.div(
+                    rx.icon(
+                        "wand-sparkles",
+                        class_name="h-3.5 w-3.5 text-emerald-700 shrink-0",
+                    ),
+                    rx.el.p(
+                        "Your counsellor will cross-check these fields against ",
+                        rx.el.span(
+                            AppState.resume_filename,
+                            class_name="font-bold text-slate-900",
+                        ),
+                        " and pre-fill anything missing before your session.",
+                        class_name="text-xs text-slate-700 ml-2 leading-relaxed font-medium",
+                    ),
+                    class_name="flex items-start p-3 bg-emerald-50/50 border border-emerald-100 rounded-xl mb-4",
+                ),
+                rx.el.div(
+                    rx.icon(
+                        "info",
+                        class_name="h-3.5 w-3.5 text-amber-700 shrink-0",
+                    ),
+                    rx.el.p(
+                        "Tip: upload your resume below to auto-source these details — you'll only need to confirm.",
+                        class_name="text-xs text-slate-700 ml-2 leading-relaxed font-medium",
+                    ),
+                    class_name="flex items-start p-3 bg-amber-50/40 border border-amber-100 rounded-xl mb-4",
+                ),
             ),
             rx.el.div(
                 field_label("Highest qualification", required=True),
@@ -328,8 +537,8 @@ def intake_form() -> rx.Component:
             section_header(
                 "sparkles",
                 "Skills & interests",
-                "What you bring and what you love.",
-                "Module 03",
+                "Suggested from your resume — add interests that aren't on paper.",
+                "Step 03",
             ),
             rx.el.div(
                 field_label("Top skills", required=True),
@@ -366,7 +575,7 @@ def intake_form() -> rx.Component:
                 "target",
                 "Goals & challenges",
                 "Where you want to go and what's in the way.",
-                "Module 04",
+                "Step 04",
             ),
             rx.el.div(
                 field_label("Target roles or industries", required=True),
@@ -399,8 +608,8 @@ def intake_form() -> rx.Component:
             section_header(
                 "compass",
                 "Where do you want guidance?",
-                "Pick all that apply — your counsellor will focus here.",
-                "Module 05",
+                "Pick all that apply — your counsellor will focus here. Tech upskilling comes first because it's the most-requested track.",
+                "Step 05",
             ),
             rx.el.div(
                 rx.foreach(GUIDANCE_OPTIONS, guidance_chip),
@@ -415,7 +624,7 @@ def intake_form() -> rx.Component:
                 "flag",
                 "Career objective",
                 "A short statement of where you want to be.",
-                "Module 07",
+                "Step 07",
             ),
             rx.el.div(
                 field_label("In a few sentences…", required=True),
@@ -430,8 +639,6 @@ def intake_form() -> rx.Component:
             ),
             class_name="bg-white rounded-2xl border border-slate-200/80 p-6 mb-5 shadow-sm",
         ),
-        # Resume
-        resume_section(),
         # Actions
         rx.el.div(
             rx.el.button(
@@ -467,7 +674,7 @@ def intake_placeholder() -> rx.Component:
             rx.el.div(
                 rx.el.div(
                     rx.el.span(
-                        "MODULE 02 • GUIDED INTAKE",
+                        "STEP 02 • GUIDED INTAKE",
                         class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
                     ),
                     class_name="mb-3",
@@ -486,12 +693,14 @@ def intake_placeholder() -> rx.Component:
                     class_name="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight",
                 ),
                 rx.el.p(
-                    "Take a few minutes to share your background. The more we know, the more tailored your session will be.",
-                    class_name="text-sm text-slate-600 mt-2 max-w-2xl",
+                    "Your name, email, phone, and stage are already saved from signup. Upload your resume to skip ahead, then confirm a few details about your goals.",
+                    class_name="text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed",
                 ),
                 class_name="mb-6",
             ),
             rx.el.div(storage_inline_notice(), class_name="mb-5"),
+            signup_summary_card(),
+            resume_first_banner(),
             intake_form(),
             class_name="max-w-3xl w-full",
         ),

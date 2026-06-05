@@ -3,42 +3,54 @@ from app.states.app_state import AppState
 from app.components.storage_status import storage_inline_notice
 
 
-SESSION_TYPES = [
+COUNSELLING_PATH = [
     {
+        "stage": "01",
         "value": "discovery",
         "title": "Discovery Session",
         "duration": "30 min",
-        "price": "Free",
+        "availability": "Free",
+        "availability_kind": "free",
         "icon": "compass",
         "desc": "A focused conversation to map your goals, surface blockers, and outline a clear next step.",
-        "best_for": "First-time bookings",
+        "best_for": "Your starting point",
+        "state": "current",
     },
     {
+        "stage": "02",
         "value": "deep_dive",
         "title": "Deep Dive Session",
         "duration": "60 min",
-        "price": "$79",
+        "availability": "Paid",
+        "availability_kind": "paid",
         "icon": "telescope",
         "desc": "An in-depth strategy session covering career mapping, skill gaps, and a 90-day action plan.",
-        "best_for": "Serious planning",
+        "best_for": "After Discovery",
+        "state": "upcoming",
     },
     {
+        "stage": "03",
         "value": "mock_interview",
         "title": "Mock Interview",
         "duration": "45 min",
-        "price": "$59",
+        "availability": "Paid",
+        "availability_kind": "paid",
         "icon": "messages-square",
         "desc": "A realistic interview simulation with detailed feedback on content, structure, and delivery.",
-        "best_for": "Active job seekers",
+        "best_for": "Once you're interviewing",
+        "state": "upcoming",
     },
     {
+        "stage": "04",
         "value": "resume_clinic",
         "title": "Resume Clinic",
         "duration": "45 min",
-        "price": "$49",
+        "availability": "Paid",
+        "availability_kind": "paid",
         "icon": "file-text",
         "desc": "Live, line-by-line review of your resume with concrete rewrites and ATS-ready formatting.",
-        "best_for": "Resume polish",
+        "best_for": "Polish before applying",
+        "state": "upcoming",
     },
 ]
 
@@ -56,38 +68,55 @@ PREP_CHECKLIST = [
 ]
 
 
-def session_card(s: dict) -> rx.Component:
-    selected = AppState.session_type == s["value"]
-    return rx.el.button(
+def availability_pill(s: dict) -> rx.Component:
+    is_free = s["availability_kind"] == "free"
+    return rx.cond(
+        is_free,
+        rx.el.span(
+            rx.icon("gift", class_name="h-3 w-3 mr-1"),
+            s["availability"],
+            class_name="inline-flex items-center text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full",
+        ),
+        rx.el.span(
+            rx.icon("lock", class_name="h-3 w-3 mr-1"),
+            s["availability"],
+            class_name="inline-flex items-center text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-full",
+        ),
+    )
+
+
+def current_session_card(s: dict) -> rx.Component:
+    return rx.el.div(
         rx.el.div(
             rx.el.div(
-                rx.icon(
-                    s["icon"],
-                    class_name=rx.cond(
-                        selected,
-                        "h-4 w-4 text-indigo-900",
-                        "h-4 w-4 text-slate-600",
-                    ),
+                rx.el.span(
+                    f"STAGE {s['stage']}",
+                    class_name="text-[9px] font-bold uppercase tracking-widest text-indigo-700",
                 ),
-                class_name=rx.cond(
-                    selected,
-                    "h-9 w-9 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0",
-                    "h-9 w-9 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0",
+                rx.el.span(
+                    "•",
+                    class_name="text-[10px] text-slate-400 mx-1.5",
                 ),
+                rx.el.span(
+                    "Currently active",
+                    class_name="text-[10px] font-bold uppercase tracking-wider text-emerald-700",
+                ),
+                class_name="flex items-center mb-2",
             ),
-            rx.cond(
-                selected,
+            rx.el.div(
+                rx.el.div(
+                    rx.icon(
+                        s["icon"],
+                        class_name="h-4 w-4 text-indigo-900",
+                    ),
+                    class_name="h-9 w-9 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0",
+                ),
                 rx.el.div(
                     rx.icon("check", class_name="h-3 w-3 text-white"),
                     class_name="h-5 w-5 rounded-full bg-indigo-900 flex items-center justify-center shadow-sm",
                 ),
-                rx.el.div(
-                    class_name="h-5 w-5 rounded-full border-2 border-slate-300",
-                ),
+                class_name="flex items-center justify-between mb-3",
             ),
-            class_name="flex items-center justify-between mb-3",
-        ),
-        rx.el.div(
             rx.el.h3(
                 s["title"],
                 class_name="text-sm font-bold text-slate-900 tracking-tight",
@@ -98,11 +127,8 @@ def session_card(s: dict) -> rx.Component:
                     class_name="text-[11px] font-semibold text-slate-600",
                 ),
                 rx.el.span("•", class_name="text-[11px] text-slate-400 mx-1"),
-                rx.el.span(
-                    s["price"],
-                    class_name="text-[11px] font-bold text-amber-700",
-                ),
-                class_name="flex items-center mt-0.5",
+                availability_pill(s),
+                class_name="flex items-center mt-1 gap-1",
             ),
             rx.el.p(
                 s["desc"],
@@ -111,21 +137,77 @@ def session_card(s: dict) -> rx.Component:
             rx.el.div(
                 rx.icon("sparkle", class_name="h-3 w-3 mr-1"),
                 s["best_for"],
-                class_name=rx.cond(
-                    selected,
-                    "inline-flex items-center text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full mt-3 w-fit",
-                    "inline-flex items-center text-[10px] font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full mt-3 w-fit",
-                ),
+                class_name="inline-flex items-center text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full mt-3 w-fit",
             ),
-            class_name="text-left",
         ),
-        type="button",
-        on_click=lambda: AppState.select_session_type(s["value"]),
-        class_name=rx.cond(
-            selected,
-            "block w-full text-left p-4 rounded-2xl border-2 border-indigo-900 bg-indigo-50/30 shadow-md shadow-indigo-100 ring-2 ring-indigo-200/40 scale-[1.02] transition-academic animate-pulse-gentle",
-            "block w-full text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50/40 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-academic",
+        class_name="block w-full text-left p-4 rounded-2xl border-2 border-indigo-900 bg-indigo-50/30 shadow-md shadow-indigo-100 ring-2 ring-indigo-200/40 transition-academic animate-pulse-gentle relative",
+        aria_current="step",
+    )
+
+
+def upcoming_session_card(s: dict) -> rx.Component:
+    return rx.el.div(
+        rx.el.div(
+            rx.el.span(
+                f"STAGE {s['stage']}",
+                class_name="text-[9px] font-bold uppercase tracking-widest text-slate-500",
+            ),
+            rx.el.span(
+                "•",
+                class_name="text-[10px] text-slate-300 mx-1.5",
+            ),
+            rx.el.span(
+                "Upcoming",
+                class_name="text-[10px] font-bold uppercase tracking-wider text-slate-500",
+            ),
+            class_name="flex items-center mb-2",
         ),
+        rx.el.div(
+            rx.el.div(
+                rx.icon(
+                    s["icon"],
+                    class_name="h-4 w-4 text-slate-500",
+                ),
+                class_name="h-9 w-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0",
+            ),
+            rx.el.div(
+                rx.icon("lock", class_name="h-3 w-3 text-slate-400"),
+                class_name="h-5 w-5 rounded-full bg-white border border-slate-200 flex items-center justify-center",
+            ),
+            class_name="flex items-center justify-between mb-3",
+        ),
+        rx.el.h3(
+            s["title"],
+            class_name="text-sm font-bold text-slate-700 tracking-tight",
+        ),
+        rx.el.div(
+            rx.el.span(
+                s["duration"],
+                class_name="text-[11px] font-semibold text-slate-500",
+            ),
+            rx.el.span("•", class_name="text-[11px] text-slate-300 mx-1"),
+            availability_pill(s),
+            class_name="flex items-center mt-1 gap-1",
+        ),
+        rx.el.p(
+            s["desc"],
+            class_name="text-[11px] text-slate-500 mt-2 leading-relaxed",
+        ),
+        rx.el.div(
+            rx.icon("sparkle", class_name="h-3 w-3 mr-1"),
+            s["best_for"],
+            class_name="inline-flex items-center text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full mt-3 w-fit",
+        ),
+        class_name="block w-full text-left p-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 opacity-90 cursor-not-allowed select-none transition-academic",
+        aria_disabled="true",
+    )
+
+
+def session_card(s: dict) -> rx.Component:
+    return rx.cond(
+        s["state"] == "current",
+        current_session_card(s),
+        upcoming_session_card(s),
     )
 
 
@@ -330,7 +412,7 @@ def booking_view() -> rx.Component:
             rx.el.div(
                 rx.el.div(
                     rx.el.span(
-                        "MODULE 04 • BOOKING",
+                        "STEP 04 • BOOKING",
                         class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
                     ),
                     class_name="mb-3",
@@ -359,34 +441,76 @@ def booking_view() -> rx.Component:
                 # Left: main flow
                 rx.el.div(
                     # Session type
+                    # Counselling path
                     rx.el.div(
                         rx.el.div(
                             rx.el.div(
                                 rx.el.div(
                                     rx.icon(
-                                        "layers",
+                                        "route",
                                         class_name="h-3.5 w-3.5 text-indigo-900",
                                     ),
                                     class_name="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center",
                                 ),
-                                rx.el.h3(
-                                    "Choose a session type",
-                                    class_name="text-sm font-semibold text-slate-900 ml-2 tracking-tight",
+                                rx.el.div(
+                                    rx.el.h3(
+                                        "Your counselling path",
+                                        class_name="text-sm font-semibold text-slate-900 tracking-tight",
+                                    ),
+                                    rx.el.p(
+                                        "Everyone begins with a free Discovery Session — advanced sessions unlock as your journey progresses.",
+                                        class_name="text-[11px] text-slate-500 mt-0.5",
+                                    ),
+                                    class_name="ml-2",
                                 ),
-                                class_name="flex items-center",
+                                class_name="flex items-start",
                             ),
                             rx.el.span(
                                 rx.el.span(
-                                    "Step 1 of 2",
+                                    "Stage 1 of 4",
                                     class_name="text-[11px] font-bold text-indigo-700",
                                 ),
-                                class_name="bg-indigo-50 border border-indigo-100/80 px-2.5 py-0.5 rounded-full",
+                                class_name="bg-indigo-50 border border-indigo-100/80 px-2.5 py-0.5 rounded-full shrink-0 ml-3",
                             ),
                             class_name="flex items-center justify-between mb-4 pb-3 border-b border-slate-100",
                         ),
                         rx.el.div(
-                            rx.foreach(SESSION_TYPES, session_card),
+                            rx.icon(
+                                "info",
+                                class_name="h-3.5 w-3.5 text-indigo-900 shrink-0 mt-0.5",
+                            ),
+                            rx.el.p(
+                                "You're booking your ",
+                                rx.el.span(
+                                    "Discovery Session",
+                                    class_name="font-bold text-slate-900",
+                                ),
+                                " — the free first stage of every Pathwise journey. Your counsellor will recommend the right next stage at the end of this session.",
+                                class_name="text-xs text-slate-700 ml-2 leading-relaxed font-medium",
+                            ),
+                            class_name="flex items-start p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl mb-4",
+                        ),
+                        rx.el.div(
+                            rx.foreach(COUNSELLING_PATH, session_card),
                             class_name="grid grid-cols-1 sm:grid-cols-2 gap-3",
+                        ),
+                        rx.el.div(
+                            rx.el.div(
+                                rx.icon(
+                                    "lock",
+                                    class_name="h-3 w-3 text-slate-400 mr-1.5",
+                                ),
+                                rx.el.span(
+                                    "Locked stages",
+                                    class_name="text-[10px] font-bold uppercase tracking-wider text-slate-500",
+                                ),
+                                class_name="flex items-center",
+                            ),
+                            rx.el.span(
+                                "Unlock after Discovery",
+                                class_name="text-[10px] font-semibold text-slate-500",
+                            ),
+                            class_name="flex items-center justify-between mt-4 pt-3 border-t border-slate-100",
                         ),
                         class_name="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm",
                     ),
@@ -533,7 +657,7 @@ def confirmation_view() -> rx.Component:
                 ),
                 rx.el.div(
                     rx.el.span(
-                        "MODULE 05 • CONFIRMED",
+                        "STEP 05 • CONFIRMED",
                         class_name="text-[11px] font-bold uppercase tracking-widest text-emerald-700",
                     ),
                     class_name="text-center mb-3",

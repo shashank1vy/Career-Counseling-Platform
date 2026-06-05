@@ -58,7 +58,7 @@ def registration() -> rx.Component:
             rx.el.div(
                 rx.el.div(
                     rx.el.span(
-                        "MODULE 01 • REGISTRATION",
+                        "STEP 01 • REGISTRATION",
                         class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
                     ),
                     class_name="mb-3",
@@ -72,16 +72,42 @@ def registration() -> rx.Component:
                     class_name="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight",
                 ),
                 rx.el.p(
-                    "Just a few details so we can match you with the right counsellor and tailor your curriculum.",
-                    class_name="text-sm text-slate-600 mt-2 max-w-xl",
+                    "Just a few details so we can match you with the right counsellor and tailor your curriculum. ",
+                    rx.el.span(
+                        "Your name, email, and phone are captured here once and reused across intake, review, and booking — no need to re-enter them.",
+                        class_name="font-semibold text-slate-800",
+                    ),
+                    class_name="text-sm text-slate-600 mt-2 max-w-xl leading-relaxed",
                 ),
                 rx.el.div(
                     perk_pill("clock", "Under 60 seconds"),
+                    perk_pill("repeat", "Reused across the journey"),
                     perk_pill("shield-check", "Private to your device"),
                     perk_pill("graduation-cap", "Vetted counsellors"),
                     class_name="flex flex-wrap gap-2 mt-4",
                 ),
                 class_name="mb-8",
+            ),
+            rx.el.div(
+                rx.el.div(
+                    rx.icon(
+                        "info",
+                        class_name="h-4 w-4 text-indigo-900 shrink-0 mt-0.5",
+                    ),
+                    rx.el.div(
+                        rx.el.p(
+                            "Captured once, reused everywhere",
+                            class_name="text-xs font-bold text-slate-900",
+                        ),
+                        rx.el.p(
+                            "We'll auto-fill your name, email, and phone in the intake form, the review summary, and the final booking confirmation. You'll never have to retype them.",
+                            class_name="text-xs text-slate-600 mt-1 leading-relaxed",
+                        ),
+                        class_name="ml-2 flex-1",
+                    ),
+                    class_name="flex items-start",
+                ),
+                class_name="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 mb-5",
             ),
             rx.el.div(
                 storage_inline_notice(),

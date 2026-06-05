@@ -82,7 +82,7 @@ def review() -> rx.Component:
             rx.el.div(
                 rx.el.div(
                     rx.el.span(
-                        "MODULE 03 • REVIEW",
+                        "STEP 03 • REVIEW",
                         class_name="text-[11px] font-bold uppercase tracking-widest text-indigo-700",
                     ),
                     class_name="mb-3",
