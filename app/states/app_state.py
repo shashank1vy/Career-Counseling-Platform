@@ -102,8 +102,9 @@ class AppState(rx.State):
             if p.get("trend_key") == self.career_path_filter
         ]
 
-    # Persistence (browser-local; survives reloads)
-    accounts_json: str = rx.LocalStorage("{}", name="pathwise_accounts")
+    # Persistence (browser-local; survives reloads using cookies for transient/session state)
+    accounts_json: str = rx.Cookie(name="pathwise_accounts")
+    current_user_email: str = rx.Cookie(name="pathwise_current_user")
     current_user_email: str = rx.LocalStorage("", name="pathwise_current_user")
 
     # Login

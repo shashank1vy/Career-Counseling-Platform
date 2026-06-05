@@ -1,16 +1,16 @@
-# Begin Counselling Flow Refinement Plan
+# Storage Architecture Refinement Plan
 
-## Phase 1: Signup and Intake Information Flow ✅
-- [x] Clarify that profile details are captured during signup and are reused throughout the counselling journey.
-- [x] Reduce repeat data entry in intake by emphasizing resume-assisted extraction for education and background details.
-- [x] Keep existing registration, login, local persistence, and fallback behavior unchanged.
+## Phase 1: Temporary Session Storage ✅
+- [x] Store temporary in-progress journey data in browser cookies for session continuity.
+- [x] Keep transient navigation and draft fields recoverable without requiring cloud sync.
+- [x] Preserve existing login, registration, intake, review, booking, and fallback behavior.
 
-## Phase 2: Step Language and Guidance Depth ✅
-- [x] Replace module-style wording with step-based wording across the journey.
-- [x] Make guidance options more comprehensive with technology upskilling as the first option.
-- [x] Preserve validation, selection behavior, accessibility, and responsive form layout.
+## Phase 2: Persistent Form Sync
+- [ ] Push completed registration, intake, resume metadata, and booking form data to the configured persistent backend.
+- [ ] Add safe backend error handling so failed persistence never breaks the user flow.
+- [ ] Keep sensitive values and raw resume contents out of synced records.
 
-## Phase 3: Booking Session Path Presentation ✅
-- [x] Keep Discovery Session selected by default and prevent users from changing the default selection.
-- [x] Present the remaining session types as a completed/ongoing counselling path rather than selectable alternatives.
-- [x] Replace prices with simple availability labels such as Free for discovery and Paid for advanced sessions.
+## Phase 3: Firebase/MongoDB Backend Setup
+- [ ] Clarify and configure the intended backend provider for cloud persistence.
+- [ ] Verify required credentials and backend connectivity before enabling cloud sync.
+- [ ] Show clear storage status for cookie-only draft data versus persisted cloud data.
