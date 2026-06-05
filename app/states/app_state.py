@@ -1,6 +1,10 @@
 import reflex as rx
 import json
 import logging
+from app.states.firebase_client import (
+    save_user_record as _firebase_save,
+    fetch_user_record as _firebase_fetch,
+)
 
 UPLOAD_ID = "resume_upload"
 
@@ -104,7 +108,6 @@ class AppState(rx.State):
 
     # Persistence (browser-local; survives reloads using cookies for transient/session state)
     accounts_json: str = rx.Cookie(name="pathwise_accounts")
-    current_user_email: str = rx.Cookie(name="pathwise_current_user")
     current_user_email: str = rx.LocalStorage("", name="pathwise_current_user")
 
     # Login
@@ -137,39 +140,47 @@ class AppState(rx.State):
     def _save_accounts(self, accounts: dict) -> None:
         self.accounts_json = json.dumps(accounts)
 
-    def _persist_current(self) -> None:
+    def _current_record(self) -> dict:
+        return {
+            "full_name": self.full_name,
+            "email": self.email,
+            "phone": self.phone,
+            "career_stage": self.career_stage,
+            "current_role": self.current_role,
+            "experience_level": self.experience_level,
+            "education_level": self.education_level,
+            "institution": self.institution,
+            "field_of_study": self.field_of_study,
+            "skills": self.skills,
+            "interests": self.interests,
+            "target_roles": self.target_roles,
+            "challenges": self.challenges,
+            "guidance_areas": list(self.guidance_areas),
+            "career_objective": self.career_objective,
+            "intake_submitted": self.intake_submitted,
+            "resume_filename": self.resume_filename,
+            "resume_size": self.resume_size,
+            "session_type": self.session_type,
+            "booking_confirmed": self.booking_confirmed,
+        }
+
+    def _persist_current(self, sync_cloud: bool = False) -> None:
         if not self.email:
             return
         accounts = self._load_accounts()
         key = self.email.lower().strip()
         existing = accounts.get(key, {})
-        existing.update(
-            {
-                "full_name": self.full_name,
-                "email": self.email,
-                "phone": self.phone,
-                "career_stage": self.career_stage,
-                "current_role": self.current_role,
-                "experience_level": self.experience_level,
-                "education_level": self.education_level,
-                "institution": self.institution,
-                "field_of_study": self.field_of_study,
-                "skills": self.skills,
-                "interests": self.interests,
-                "target_roles": self.target_roles,
-                "challenges": self.challenges,
-                "guidance_areas": list(self.guidance_areas),
-                "career_objective": self.career_objective,
-                "intake_submitted": self.intake_submitted,
-                "resume_filename": self.resume_filename,
-                "resume_size": self.resume_size,
-                "session_type": self.session_type,
-                "booking_confirmed": self.booking_confirmed,
-            }
-        )
+        existing.update(self._current_record())
         accounts[key] = existing
         self._save_accounts(accounts)
         self.current_user_email = key
+        if sync_cloud:
+            try:
+                _firebase_save(key, existing)
+            except Exception:
+                logging.exception(
+                    "Pathwise: Firestore sync failed; cookie state preserved."
+                )
 
     def _hydrate_from(self, record: dict) -> None:
         self.full_name = record.get("full_name", "")
@@ -344,12 +355,23 @@ class AppState(rx.State):
         self.phone = phone
         self.career_stage = stage
         self.registered = True
-        # Hydrate from existing saved account if present
+        # Hydrate from existing saved account (cookies first, then Firebase)
         accounts = self._load_accounts()
         existing = accounts.get(email.lower())
+        cloud_record = None
+        try:
+            cloud_record = _firebase_fetch(email.lower())
+        except Exception:
+            logging.exception(
+                "Pathwise: Firestore fetch failed during registration."
+            )
+        merged = {}
+        if cloud_record:
+            merged.update(cloud_record)
         if existing:
-            # Preserve any prior intake/booking; but use latest contact details
-            existing.update(
+            merged.update(existing)
+        if merged:
+            merged.update(
                 {
                     "full_name": name,
                     "email": email,
@@ -357,8 +379,8 @@ class AppState(rx.State):
                     "career_stage": stage,
                 }
             )
-            self._hydrate_from(existing)
-        self._persist_current()
+            self._hydrate_from(merged)
+        self._persist_current(sync_cloud=True)
         self.current_step = "intake"
         return rx.toast.success(
             f"Welcome, {name.split()[0]}! Saved to this browser on this device."
@@ -373,17 +395,29 @@ class AppState(rx.State):
         self.login_phone_error = ""
         self.login_general_error = ""
 
-        if "@" not in email or "." not in email or len(email) < 5:
+        if not email or "." not in email or len(email) < 5:
             self.login_email_error = "Enter the email you registered with."
             return
 
         accounts = self._load_accounts()
         record = accounts.get(email)
         if not record:
-            self.login_general_error = (
-                "No account found for that email. Try signing up instead."
-            )
-            return
+            try:
+                cloud_record = _firebase_fetch(email)
+            except Exception:
+                logging.exception(
+                    "Pathwise: Firestore fetch failed during login."
+                )
+                cloud_record = None
+            if cloud_record:
+                record = cloud_record
+                accounts[email] = record
+                self._save_accounts(accounts)
+            else:
+                self.login_general_error = (
+                    "No account found for that email. Try signing up instead."
+                )
+                return
 
         # Optional phone match — if provided, must match saved phone
         if phone:
@@ -477,7 +511,7 @@ class AppState(rx.State):
             self.resume_filename = file.name
             self.resume_size = len(data)
             self.resume_error = ""
-            self._persist_current()
+            self._persist_current(sync_cloud=True)
             return rx.toast.success(
                 f"Resume uploaded & saved locally: {file.name}"
             )
@@ -541,11 +575,9 @@ class AppState(rx.State):
         self.challenges = challenges
         self.career_objective = objective
         self.intake_submitted = True
-        self._persist_current()
+        self._persist_current(sync_cloud=True)
         self.current_step = "review"
-        return rx.toast.success(
-            "Intake saved to this browser — review your details next."
-        )
+        return rx.toast.success("Intake saved — review your details next.")
 
     @rx.event
     def reset_intake(self):
@@ -574,22 +606,20 @@ class AppState(rx.State):
     @rx.event
     def confirm_and_book(self):
         self.current_step = "booking"
-        self._persist_current()
+        self._persist_current(sync_cloud=True)
         return rx.toast.success("Great! Let's get your session booked.")
 
     @rx.event
     def select_session_type(self, value: str):
         self.session_type = value
-        self._persist_current()
+        self._persist_current(sync_cloud=True)
 
     @rx.event
     def confirm_booking(self):
         self.booking_confirmed = True
         self.current_step = "done"
-        self._persist_current()
-        return rx.toast.success(
-            "Booked! Confirmation saved to this browser on this device."
-        )
+        self._persist_current(sync_cloud=True)
+        return rx.toast.success("Booked! Confirmation saved securely.")
 
     @rx.event
     def restart_journey(self):
