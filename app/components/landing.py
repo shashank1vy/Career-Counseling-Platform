@@ -204,37 +204,69 @@ def stat(value: str, label: str) -> rx.Component:
     )
 
 
+def filter_tab(label: str, key_val: str) -> rx.Component:
+    is_selected = AppState.career_path_filter == key_val
+    return rx.el.button(
+        label,
+        on_click=lambda: AppState.set_career_path_filter(key_val),
+        type="button",
+        class_name=rx.cond(
+            is_selected,
+            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-gradient-to-r from-blue-600 to-indigo-650 text-white shadow-md shadow-blue-100 scale-[1.02] border border-blue-600/10",
+            "px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all text-stone-600 bg-white border border-stone-200 hover:bg-stone-50 hover:text-stone-900 hover:border-stone-300",
+        ),
+    )
+
+
 def career_path_card(path: dict[str, str]) -> rx.Component:
     theme_color = path["color_theme"]
     return rx.el.div(
         rx.el.div(
             rx.el.div(
-                rx.icon(
-                    path["icon"],
+                rx.el.div(
+                    rx.icon(
+                        path["icon"],
+                        class_name=rx.match(
+                            theme_color,
+                            ("blue", "h-5 w-5 text-blue-600"),
+                            ("rose", "h-5 w-5 text-rose-600"),
+                            ("sage", "h-5 w-5 text-emerald-600"),
+                            "h-5 w-5 text-amber-600",
+                        ),
+                    ),
                     class_name=rx.match(
                         theme_color,
-                        ("blue", "h-5 w-5 text-blue-600"),
-                        ("rose", "h-5 w-5 text-rose-600"),
-                        ("sage", "h-5 w-5 text-emerald-600"),
-                        "h-5 w-5 text-amber-600",
+                        (
+                            "blue",
+                            "h-10 w-10 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100 shrink-0",
+                        ),
+                        (
+                            "rose",
+                            "h-10 w-10 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 shrink-0",
+                        ),
+                        (
+                            "sage",
+                            "h-10 w-10 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0",
+                        ),
+                        "h-10 w-10 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100 shrink-0",
                     ),
                 ),
-                class_name=rx.match(
-                    theme_color,
-                    (
-                        "blue",
-                        "h-10 w-10 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100",
+                rx.el.span(
+                    path["trend_label"],
+                    class_name=rx.match(
+                        path["trend_key"],
+                        (
+                            "hot",
+                            "text-[11px] font-extrabold text-red-700 bg-red-50 border border-red-100 px-2.5 py-0.5 rounded-full shadow-sm w-fit flex items-center gap-1",
+                        ),
+                        (
+                            "rising",
+                            "text-[11px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full shadow-sm w-fit flex items-center gap-1",
+                        ),
+                        "text-[11px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-full shadow-sm w-fit flex items-center gap-1",
                     ),
-                    (
-                        "rose",
-                        "h-10 w-10 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100",
-                    ),
-                    (
-                        "sage",
-                        "h-10 w-10 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100",
-                    ),
-                    "h-10 w-10 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100",
                 ),
+                class_name="flex items-center justify-between w-full mb-4",
             ),
             rx.el.div(
                 rx.el.h3(
@@ -245,10 +277,29 @@ def career_path_card(path: dict[str, str]) -> rx.Component:
                     path["desc"],
                     class_name="text-xs text-stone-600 mt-1 leading-relaxed",
                 ),
-                class_name="ml-4",
+                class_name="w-full",
             ),
-            class_name="flex items-start",
+            class_name="w-full",
         ),
+        # Key Skills Section
+        rx.el.div(
+            rx.el.p(
+                "Key skills in demand:",
+                class_name="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-2",
+            ),
+            rx.el.div(
+                rx.foreach(
+                    path["key_skills"].split(","),
+                    lambda skill: rx.el.span(
+                        skill.strip(),
+                        class_name="text-xs font-semibold text-stone-700 bg-stone-50 border border-stone-200/60 px-2.5 py-0.5 rounded-xl",
+                    ),
+                ),
+                class_name="flex flex-wrap gap-1.5",
+            ),
+            class_name="mt-4 pt-4 border-t border-stone-100",
+        ),
+        # Roles Section
         rx.el.div(
             rx.el.p(
                 "Sample roles you can pursue:",
@@ -281,7 +332,7 @@ def career_path_card(path: dict[str, str]) -> rx.Component:
             ),
             class_name="mt-4 pt-4 border-t border-stone-100",
         ),
-        class_name="bg-white rounded-3xl border border-stone-200/60 p-6 hover:shadow-lg transition-all duration-300 flex flex-col justify-between",
+        class_name="bg-white rounded-3xl border border-stone-200/60 p-6 hover:shadow-lg hover:border-stone-300 transition-all duration-300 flex flex-col justify-between",
     )
 
 
@@ -415,10 +466,19 @@ def landing() -> rx.Component:
                         "Discover high-demand categories where our expert counsellors can fast-track your progression.",
                         class_name="text-sm text-stone-600 mt-2",
                     ),
-                    class_name="text-center mb-10",
+                    class_name="text-center mb-8",
                 ),
                 rx.el.div(
-                    rx.foreach(AppState.career_paths, career_path_card),
+                    filter_tab("All paths", "all"),
+                    filter_tab("🔥 Hot market", "hot"),
+                    filter_tab("📈 Rising", "rising"),
+                    filter_tab("✓ Steady", "steady"),
+                    class_name="flex flex-wrap justify-center items-center gap-2 mb-10 bg-stone-50/50 p-2 rounded-2xl border border-stone-150 max-w-md mx-auto",
+                ),
+                rx.el.div(
+                    rx.foreach(
+                        AppState.filtered_career_paths, career_path_card
+                    ),
                     class_name="grid grid-cols-1 md:grid-cols-2 gap-6",
                 ),
                 class_name="max-w-6xl mx-auto",

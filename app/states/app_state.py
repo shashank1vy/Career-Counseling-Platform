@@ -43,6 +43,12 @@ class AppState(rx.State):
     resume_error: str = ""
 
     # Career Paths exploration data
+    career_path_filter: str = "all"
+
+    @rx.event
+    def set_career_path_filter(self, filter_val: str):
+        self.career_path_filter = filter_val
+
     career_paths: list[dict[str, str]] = [
         {
             "title": "Technology & Engineering",
@@ -50,6 +56,9 @@ class AppState(rx.State):
             "color_theme": "blue",
             "desc": "Software engineering, DevOps, cloud architecture, and data engineering pathways.",
             "roles": "Frontend Developer, Backend Engineer, Cloud Architect, Data Engineer",
+            "trend_label": "🔥 Hot market",
+            "trend_key": "hot",
+            "key_skills": "System Design, Kubernetes, Python, React, AWS",
         },
         {
             "title": "Product & Creative Design",
@@ -57,6 +66,9 @@ class AppState(rx.State):
             "color_theme": "rose",
             "desc": "Product management, user research, UI/UX design, and creative direction.",
             "roles": "Product Manager, UX Designer, UX Researcher, Creative Director",
+            "trend_label": "📈 Rising",
+            "trend_key": "rising",
+            "key_skills": "User Research, Wireframing, Product Strategy, Figma, A/B Testing",
         },
         {
             "title": "Data Science & AI",
@@ -64,6 +76,9 @@ class AppState(rx.State):
             "color_theme": "sage",
             "desc": "Artificial intelligence, machine learning, deep data science, and business analytics.",
             "roles": "ML Engineer, Data Scientist, BI Specialist, Analytics Lead",
+            "trend_label": "🔥 Hot market",
+            "trend_key": "hot",
+            "key_skills": "PyTorch, LLMs, SQL, Vector Databases, Spark",
         },
         {
             "title": "Business & Growth Strategy",
@@ -71,8 +86,21 @@ class AppState(rx.State):
             "color_theme": "amber",
             "desc": "Management consulting, operations strategy, business development, and product marketing.",
             "roles": "Management Consultant, Operations Lead, Growth Marketer, Business Analyst",
+            "trend_label": "✓ Steady",
+            "trend_key": "steady",
+            "key_skills": "Financial Modeling, SEO, CRM, Market Research, Agile",
         },
     ]
+
+    @rx.var
+    def filtered_career_paths(self) -> list[dict[str, str]]:
+        if self.career_path_filter == "all":
+            return self.career_paths
+        return [
+            p
+            for p in self.career_paths
+            if p.get("trend_key") == self.career_path_filter
+        ]
 
     # Persistence (browser-local; survives reloads)
     accounts_json: str = rx.LocalStorage("{}", name="pathwise_accounts")
