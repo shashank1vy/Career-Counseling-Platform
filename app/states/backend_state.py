@@ -1,6 +1,7 @@
 import reflex as rx
 import os
 import logging
+import time
 
 
 # Safe data boundaries — these are the ONLY fields that would ever be
@@ -36,27 +37,127 @@ SAFE_BOOKING_FIELDS: list[str] = [
 ]
 
 
+# Cache the backend readiness check so we don't ping MongoDB on every render.
+# (cached_result, cached_label, cache_expiry_epoch)
+_BACKEND_CACHE: dict[str, float | bool | str] = {
+    "ready": False,
+    "label": "",
+    "expires_at": 0.0,
+}
+_BACKEND_CACHE_TTL_SECONDS: float = 60.0
+
+
+def _is_safe_mongo_uri(uri: str) -> bool:
+    """Lightweight, non-logging validation of a MongoDB URI shape."""
+    if not uri or not isinstance(uri, str):
+        return False
+    uri_l = uri.strip().lower()
+    if not (
+        uri_l.startswith("mongodb://") or uri_l.startswith("mongodb+srv://")
+    ):
+        return False
+    # Reject obviously local/unreachable targets so we don't even attempt
+    # a network call against a service that is not provisioned in the sandbox.
+    local_hosts = ("localhost", "127.0.0.1", "0.0.0.0", "::1")
+    for host in local_hosts:
+        if f"@{host}" in uri_l or f"//{host}" in uri_l:
+            return False
+    return True
+
+
+def _try_mongo_ping() -> bool:
+    """Attempt a short, safe PyMongo ping. Returns True only on success.
+
+    Never raises. Never logs the URI or credentials. All failures (missing
+    URI, malformed URI, DNS failure, connection refused, auth error,
+    timeout, unexpected exception) return False so the UI gracefully
+    falls back to local-only storage messaging.
+    """
+    uri = os.getenv("MONGODB_URI", "")
+    if not _is_safe_mongo_uri(uri):
+        return False
+    try:
+        from pymongo import MongoClient
+        from pymongo.errors import PyMongoError
+
+        client = MongoClient(
+            uri,
+            serverSelectionTimeoutMS=1500,
+            connectTimeoutMS=1500,
+            socketTimeoutMS=1500,
+            appname="pathwise-readiness-check",
+        )
+        try:
+            result = client.admin.command("ping")
+            return bool(result and result.get("ok") == 1)
+        except PyMongoError:
+            # Don't log the exception payload because some PyMongo errors
+            # echo the connection string. Just record a generic message.
+            logging.exception("Unexpected error")
+            logging.warning(
+                "Pathwise: MongoDB readiness ping failed; "
+                "falling back to browser-local storage."
+            )
+            return False
+        finally:
+            try:
+                client.close()
+            except Exception:
+                logging.exception("Unexpected error")
+    except Exception:
+        logging.exception("Unexpected error")
+        logging.warning(
+            "Pathwise: MongoDB readiness check could not run; "
+            "falling back to browser-local storage."
+        )
+        return False
+
+
 def _detect_backend_ready() -> tuple[bool, str]:
     """Detect (server-side only) whether a secure backend is configured.
 
     Returns (ready, provider_label). Never returns or exposes the actual
     credential values — only a boolean and a generic provider label that
-    is safe to render in the UI.
+    is safe to render in the UI. Results are cached briefly so this is
+    cheap to call from computed vars.
     """
     try:
+        now = time.monotonic()
+        if now < float(_BACKEND_CACHE.get("expires_at", 0.0)):
+            return (
+                bool(_BACKEND_CACHE.get("ready", False)),
+                str(_BACKEND_CACHE.get("label", "")),
+            )
+
+        ready = False
+        label = ""
+
         firebase_keys = [
             "FIREBASE_SERVICE_ACCOUNT_JSON",
             "GOOGLE_APPLICATION_CREDENTIALS",
             "FIREBASE_PROJECT_ID",
         ]
         if any(os.getenv(k) for k in firebase_keys):
-            return True, "Firebase"
-        db_keys = ["DATABASE_URL", "POSTGRES_URL"]
-        if any(os.getenv(k) for k in db_keys):
-            return True, "Secure database"
-        return False, ""
-    except Exception as e:
-        logging.exception(f"Error detecting backend readiness: {e}")
+            ready, label = True, "Firebase"
+        elif os.getenv("MONGODB_URI"):
+            # Only mark MongoDB ready if a short, safe ping actually succeeds.
+            if _try_mongo_ping():
+                ready, label = True, "MongoDB"
+            else:
+                ready, label = False, ""
+        elif any(os.getenv(k) for k in ("DATABASE_URL", "POSTGRES_URL")):
+            ready, label = True, "Secure database"
+
+        _BACKEND_CACHE["ready"] = ready
+        _BACKEND_CACHE["label"] = label
+        _BACKEND_CACHE["expires_at"] = now + _BACKEND_CACHE_TTL_SECONDS
+        return ready, label
+    except Exception:
+        logging.exception("Unexpected error")
+        logging.warning(
+            "Pathwise: backend readiness detection failed; "
+            "falling back to browser-local storage."
+        )
         return False, ""
 
 
