@@ -42,6 +42,38 @@ class AppState(rx.State):
     resume_size: int = 0
     resume_error: str = ""
 
+    # Career Paths exploration data
+    career_paths: list[dict[str, str]] = [
+        {
+            "title": "Technology & Engineering",
+            "icon": "cpu",
+            "color_theme": "blue",
+            "desc": "Software engineering, DevOps, cloud architecture, and data engineering pathways.",
+            "roles": "Frontend Developer, Backend Engineer, Cloud Architect, Data Engineer",
+        },
+        {
+            "title": "Product & Creative Design",
+            "icon": "palette",
+            "color_theme": "rose",
+            "desc": "Product management, user research, UI/UX design, and creative direction.",
+            "roles": "Product Manager, UX Designer, UX Researcher, Creative Director",
+        },
+        {
+            "title": "Data Science & AI",
+            "icon": "brain-circuit",
+            "color_theme": "sage",
+            "desc": "Artificial intelligence, machine learning, deep data science, and business analytics.",
+            "roles": "ML Engineer, Data Scientist, BI Specialist, Analytics Lead",
+        },
+        {
+            "title": "Business & Growth Strategy",
+            "icon": "trending-up",
+            "color_theme": "amber",
+            "desc": "Management consulting, operations strategy, business development, and product marketing.",
+            "roles": "Management Consultant, Operations Lead, Growth Marketer, Business Analyst",
+        },
+    ]
+
     # Persistence (browser-local; survives reloads)
     accounts_json: str = rx.LocalStorage("{}", name="pathwise_accounts")
     current_user_email: str = rx.LocalStorage("", name="pathwise_current_user")
