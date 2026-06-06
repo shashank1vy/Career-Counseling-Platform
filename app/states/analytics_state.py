@@ -44,12 +44,21 @@ class AnalyticsState(rx.State):
         if not self.session_id:
             self.session_id = new_session_id()
 
-    async def _build_user_context(self) -> tuple[str, dict]:
+    async def _build_user_context(
+        self, allow_cross_state: bool = True
+    ) -> tuple[str, dict]:
         """Returns (user_email, sanitized metadata) for the current user.
 
         Pulls journey context from AppState when available so events are
         meaningfully tagged regardless of identity. Never raises.
+
+        When `allow_cross_state` is False (e.g. inside background lifecycle
+        loops where we are not currently holding the state lock), this
+        skips the cross-state fetch entirely and returns safe anonymous
+        defaults to avoid Reflex `ImmutableStateError`.
         """
+        if not allow_cross_state:
+            return "", {"is_logged_in": False}
         try:
             from app.states.app_state import AppState
 
@@ -70,11 +79,21 @@ class AnalyticsState(rx.State):
                 ),
             }
             return email, md
-        except Exception:
-            logging.exception(
-                "Pathwise analytics: failed to build user context"
-            )
-            return "", {}
+        except Exception as e:
+            # Cross-state access is not always available (e.g. when called
+            # from a background task outside an `async with self:` block).
+            # That is an expected condition — fall back silently to safe
+            # anonymous metadata. Only log truly unexpected failures.
+            name = type(e).__name__
+            if name not in {
+                "ImmutableStateError",
+                "StateNotFoundError",
+                "RuntimeError",
+            }:
+                logging.exception(
+                    "Pathwise analytics: failed to build user context"
+                )
+            return "", {"is_logged_in": False}
 
     @rx.event
     async def track(
@@ -238,6 +257,11 @@ class AnalyticsState(rx.State):
                 while True:
                     await asyncio.sleep(60.0)
                     try:
+                        # Read all state (including cross-state user
+                        # context) while holding the state lock — this is
+                        # the only safe way to call `get_state` from a
+                        # background task without triggering
+                        # ImmutableStateError.
                         async with self:
                             if (
                                 not self.session_id
@@ -248,7 +272,10 @@ class AnalyticsState(rx.State):
                             current_step = self.current_step_name or "landing"
                             session_id_local = self.session_id
                             opened_at_local = self.app_opened_at_ms
-                        user_email, ctx_md = await self._build_user_context()
+                            user_email, ctx_md = await self._build_user_context(
+                                allow_cross_state=True
+                            )
+                        # Outside the lock: only do log/network work.
                         now_ms = int(time.time() * 1000)
                         elapsed_ms = max(0, now_ms - opened_at_local)
                         md = dict(ctx_md)
