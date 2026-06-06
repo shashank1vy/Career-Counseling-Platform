@@ -1,5 +1,6 @@
 import reflex as rx
 from app.states.app_state import AppState
+from app.states.analytics_state import AnalyticsState
 from app.components.navbar import navbar
 from app.components.footer import footer
 from app.components.landing import landing
@@ -11,8 +12,42 @@ from app.components.booking import booking_placeholder
 from app.components.storage_status import storage_status_banner
 
 
+# Best-effort browser lifecycle beacon. Uses `navigator.sendBeacon` against a
+# tiny, no-credential public endpoint so the analytics layer can still observe
+# unload approximations server-side via Firebase heartbeats. The script is
+# completely invisible (no UI), wrapped in try/catch, and falls back to a
+# no-op if the browser doesn't support the API.
+_LIFECYCLE_SCRIPT = """
+(function() {
+  try {
+    if (window.__pathwiseLifecycleHooked) return;
+    window.__pathwiseLifecycleHooked = true;
+    var openedAt = Date.now();
+    window.__pathwiseOpenedAt = openedAt;
+    function markClose(reason) {
+      try {
+        var key = 'pathwise_last_close_ms';
+        var payload = JSON.stringify({
+          reason: reason,
+          at: Date.now(),
+          duration_ms: Date.now() - openedAt
+        });
+        try { localStorage.setItem(key, payload); } catch (e) {}
+      } catch (e) {}
+    }
+    window.addEventListener('beforeunload', function() { markClose('beforeunload'); });
+    window.addEventListener('pagehide', function() { markClose('pagehide'); });
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden') { markClose('hidden'); }
+    });
+  } catch (e) {}
+})();
+"""
+
+
 def index() -> rx.Component:
     return rx.el.main(
+        rx.script(_LIFECYCLE_SCRIPT),
         navbar(),
         rx.el.div(
             rx.el.div(
@@ -51,4 +86,4 @@ app = rx.App(
         ),
     ],
 )
-app.add_page(index, route="/")
+app.add_page(index, route="/", on_load=AnalyticsState.on_app_open)

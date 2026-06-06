@@ -5,6 +5,7 @@ from app.states.firebase_client import (
     save_user_record as _firebase_save,
     fetch_user_record as _firebase_fetch,
 )
+from app.states.analytics_state import AnalyticsState
 
 UPLOAD_ID = "resume_upload"
 
@@ -51,7 +52,17 @@ class AppState(rx.State):
 
     @rx.event
     def set_career_path_filter(self, filter_val: str):
+        prev = self.career_path_filter
         self.career_path_filter = filter_val
+        yield AnalyticsState.track(
+            "career_path_filter_changed",
+            self.current_step,
+            {
+                "filter_value": filter_val,
+                "from_step": prev,
+                "to_step": filter_val,
+            },
+        )
 
     career_paths: list[dict[str, str]] = [
         {
@@ -344,32 +355,87 @@ class AppState(rx.State):
 
     @rx.event
     def go_to_register(self, stage: str = ""):
+        prev = self.current_step
         if stage:
             self.career_stage = stage
         self.current_step = "register"
+        yield AnalyticsState.enter_step("register")
+        yield AnalyticsState.track(
+            "journey_navigate",
+            "register",
+            {
+                "from_step": prev,
+                "to_step": "register",
+                "career_stage": self.career_stage,
+                "cta_id": "go_to_register",
+            },
+        )
 
     @rx.event
     def go_to_login(self):
+        prev = self.current_step
         self.login_email_error = ""
         self.login_phone_error = ""
         self.login_general_error = ""
         self.current_step = "login"
+        yield AnalyticsState.enter_step("login")
+        yield AnalyticsState.track(
+            "journey_navigate",
+            "login",
+            {
+                "from_step": prev,
+                "to_step": "login",
+                "cta_id": "go_to_login",
+            },
+        )
 
     @rx.event
     def go_to_landing(self):
+        prev = self.current_step
         self.current_step = "landing"
+        yield AnalyticsState.enter_step("landing")
+        yield AnalyticsState.track(
+            "journey_navigate",
+            "landing",
+            {
+                "from_step": prev,
+                "to_step": "landing",
+                "cta_id": "go_to_landing",
+            },
+        )
 
     @rx.event
     def go_to_intake(self):
+        prev = self.current_step
         self.current_step = "intake"
+        yield AnalyticsState.enter_step("intake")
+        yield AnalyticsState.track(
+            "journey_navigate",
+            "intake",
+            {"from_step": prev, "to_step": "intake"},
+        )
 
     @rx.event
     def go_to_review(self):
+        prev = self.current_step
         self.current_step = "review"
+        yield AnalyticsState.enter_step("review")
+        yield AnalyticsState.track(
+            "journey_navigate",
+            "review",
+            {"from_step": prev, "to_step": "review"},
+        )
 
     @rx.event
     def go_to_booking(self):
+        prev = self.current_step
         self.current_step = "booking"
+        yield AnalyticsState.enter_step("booking")
+        yield AnalyticsState.track(
+            "journey_navigate",
+            "booking",
+            {"from_step": prev, "to_step": "booking"},
+        )
 
     @rx.event
     def set_stage(self, v: str):
@@ -427,6 +493,7 @@ class AppState(rx.State):
             logging.exception(
                 "Pathwise: Firestore fetch failed during registration."
             )
+            cloud_record = None
         merged = {}
         if cloud_record:
             merged.update(cloud_record)
@@ -443,8 +510,21 @@ class AppState(rx.State):
             )
             self._hydrate_from(merged)
         self._persist_current(sync_cloud=True)
+        prev_step = "register"
         self.current_step = "intake"
-        return rx.toast.success(
+        yield AnalyticsState.enter_step("intake")
+        yield AnalyticsState.track(
+            "registration_success",
+            "intake",
+            {
+                "career_stage": stage,
+                "from_step": prev_step,
+                "to_step": "intake",
+                "registered": True,
+                "outcome": "success",
+            },
+        )
+        yield rx.toast.success(
             f"Welcome, {name.split()[0]}! Saved to this browser on this device."
         )
 
@@ -499,6 +579,7 @@ class AppState(rx.State):
 
         self._hydrate_from(record)
         self.current_user_email = email
+        prev_step = "login"
         # Resume where the user left off
         if self.booking_confirmed:
             self.current_step = "done"
@@ -508,12 +589,39 @@ class AppState(rx.State):
             self.current_step = "intake"
         else:
             self.current_step = "register"
-        return rx.toast.success(
+        yield AnalyticsState.enter_step(self.current_step)
+        yield AnalyticsState.track(
+            "login_success",
+            self.current_step,
+            {
+                "from_step": prev_step,
+                "to_step": self.current_step,
+                "career_stage": self.career_stage,
+                "intake_submitted": self.intake_submitted,
+                "booking_confirmed": self.booking_confirmed,
+                "has_resume": self.resume_filename != "",
+                "is_logged_in": True,
+                "outcome": "success",
+            },
+        )
+        yield rx.toast.success(
             f"Welcome back, {AppState.first_name}! Picking up where you left off."
         )
 
     @rx.event
     def logout(self):
+        prev_email = self.current_user_email
+        prev_step = self.current_step
+        yield AnalyticsState.track(
+            "logout",
+            "landing",
+            {
+                "from_step": prev_step,
+                "to_step": "landing",
+                "is_logged_in": False,
+                "outcome": "success",
+            },
+        )
         self.current_user_email = ""
         self.full_name = ""
         self.email = ""
@@ -537,7 +645,9 @@ class AppState(rx.State):
         self.booking_confirmed = False
         self.registered = False
         self.current_step = "landing"
-        return rx.toast.info(
+        _ = prev_email
+        yield AnalyticsState.enter_step("landing")
+        yield rx.toast.info(
             "Signed out — your saved details remain on this device."
         )
 
@@ -545,8 +655,19 @@ class AppState(rx.State):
     def toggle_guidance(self, area: str):
         if area in self.guidance_areas:
             self.guidance_areas = [a for a in self.guidance_areas if a != area]
+            action = "remove"
         else:
             self.guidance_areas = [*self.guidance_areas, area]
+            action = "add"
+        yield AnalyticsState.track(
+            "guidance_area_toggled",
+            self.current_step,
+            {
+                "guidance_area": area,
+                "guidance_count": len(self.guidance_areas),
+                "outcome": action,
+            },
+        )
 
     @rx.event
     async def handle_resume_upload(self, files: list[rx.UploadFile]):
@@ -624,7 +745,16 @@ class AppState(rx.State):
 
         self.intake_errors = errors
         if errors:
-            return rx.toast.error("Please fix the highlighted fields.")
+            yield AnalyticsState.track(
+                "intake_validation_failed",
+                "intake",
+                {
+                    "validation_failed_fields": list(errors.keys()),
+                    "outcome": "validation_failed",
+                },
+            )
+            yield rx.toast.error("Please fix the highlighted fields.")
+            return
 
         self.current_role = current_role
         self.experience_level = experience
@@ -639,10 +769,52 @@ class AppState(rx.State):
         self.intake_submitted = True
         self._persist_current(sync_cloud=True)
         self.current_step = "review"
-        return rx.toast.success("Intake saved — review your details next.")
+        skill_count = len([s.strip() for s in skills.split(",") if s.strip()])
+        interest_count = len(
+            [s.strip() for s in interests.split(",") if s.strip()]
+        )
+        target_count = len([s.strip() for s in targets.split(",") if s.strip()])
+        resume_size_bucket = "none"
+        if self.resume_size > 0:
+            if self.resume_size < 200 * 1024:
+                resume_size_bucket = "small"
+            elif self.resume_size < 1024 * 1024:
+                resume_size_bucket = "medium"
+            else:
+                resume_size_bucket = "large"
+        yield AnalyticsState.enter_step("review")
+        yield AnalyticsState.track(
+            "intake_submitted",
+            "review",
+            {
+                "from_step": "intake",
+                "to_step": "review",
+                "career_stage": self.career_stage,
+                "experience_level": experience,
+                "education_level": education,
+                "guidance_count": len(self.guidance_areas),
+                "skill_count": skill_count,
+                "interest_count": interest_count,
+                "target_role_count": target_count,
+                "has_resume": self.resume_filename != "",
+                "resume_size_bucket": resume_size_bucket,
+                "intake_submitted": True,
+                "outcome": "success",
+            },
+        )
+        yield rx.toast.success("Intake saved — review your details next.")
 
     @rx.event
     def reset_intake(self):
+        prev_step = self.current_step
+        yield AnalyticsState.track(
+            "intake_reset",
+            prev_step,
+            {
+                "from_step": prev_step,
+                "outcome": "reset",
+            },
+        )
         self.current_role = ""
         self.experience_level = ""
         self.education_level = ""
@@ -659,32 +831,95 @@ class AppState(rx.State):
         self.resume_filename = ""
         self.resume_size = 0
         self.resume_error = ""
-        return rx.toast.info("Intake cleared.")
+        yield rx.toast.info("Intake cleared.")
 
     @rx.event
     def edit_intake(self):
+        prev = self.current_step
         self.current_step = "intake"
+        yield AnalyticsState.enter_step("intake")
+        yield AnalyticsState.track(
+            "intake_edit_clicked",
+            "intake",
+            {
+                "from_step": prev,
+                "to_step": "intake",
+                "cta_id": "edit_intake",
+            },
+        )
 
     @rx.event
     def confirm_and_book(self):
+        prev = self.current_step
         self.current_step = "booking"
         self._persist_current(sync_cloud=True)
-        return rx.toast.success("Great! Let's get your session booked.")
+        yield AnalyticsState.enter_step("booking")
+        yield AnalyticsState.track(
+            "review_confirmed",
+            "booking",
+            {
+                "from_step": prev,
+                "to_step": "booking",
+                "career_stage": self.career_stage,
+                "guidance_count": len(self.guidance_areas),
+                "has_resume": self.resume_filename != "",
+                "session_type": self.session_type,
+                "cta_id": "continue_to_booking",
+            },
+        )
+        yield rx.toast.success("Great! Let's get your session booked.")
 
     @rx.event
     def select_session_type(self, value: str):
+        prev = self.session_type
         self.session_type = value
         self._persist_current(sync_cloud=True)
+        yield AnalyticsState.track(
+            "session_type_selected",
+            self.current_step,
+            {
+                "session_type": value,
+                "from_step": prev,
+                "to_step": value,
+            },
+        )
 
     @rx.event
     def confirm_booking(self):
         self.booking_confirmed = True
+        prev = self.current_step
         self.current_step = "done"
         self._persist_current(sync_cloud=True)
-        return rx.toast.success("Booked! Confirmation saved securely.")
+        yield AnalyticsState.enter_step("done")
+        yield AnalyticsState.track(
+            "booking_confirmed",
+            "done",
+            {
+                "from_step": prev,
+                "to_step": "done",
+                "career_stage": self.career_stage,
+                "session_type": self.session_type,
+                "guidance_count": len(self.guidance_areas),
+                "has_resume": self.resume_filename != "",
+                "booking_confirmed": True,
+                "outcome": "success",
+            },
+        )
+        yield rx.toast.success("Booked! Confirmation saved securely.")
 
     @rx.event
     def restart_journey(self):
+        prev = self.current_step
         self.booking_confirmed = False
         self.current_step = "landing"
-        return rx.toast.info("Welcome back!")
+        yield AnalyticsState.enter_step("landing")
+        yield AnalyticsState.track(
+            "journey_restart",
+            "landing",
+            {
+                "from_step": prev,
+                "to_step": "landing",
+                "cta_id": "restart_journey",
+            },
+        )
+        yield rx.toast.info("Welcome back!")
