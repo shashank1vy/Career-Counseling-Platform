@@ -383,7 +383,7 @@ def calendly_section() -> rx.Component:
         rx.el.iframe(
             src=AppState.calendly_url,
             title="Calendly booking calendar",
-            class_name="w-full rounded-xl border border-slate-200/80 bg-white",
+            class_name="w-full h-[580px] sm:h-[680px] md:h-[780px] lg:h-[850px] rounded-xl border border-slate-200/80 bg-white",
             style={"minWidth": "320px"},
             custom_attrs={"frameborder": "0", "loading": "lazy"},
             key=AppState.calendly_url,
