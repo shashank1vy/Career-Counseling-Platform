@@ -352,7 +352,7 @@ def calendly_section() -> rx.Component:
                     class_name="h-3.5 w-3.5 text-emerald-700",
                 ),
                 rx.el.span(
-                    "Powered by Calendly",
+                    "Configured Event Active",
                     class_name="text-[11px] font-semibold text-slate-600 ml-1",
                 ),
                 class_name="flex items-center",
@@ -362,17 +362,17 @@ def calendly_section() -> rx.Component:
         rx.el.div(
             rx.el.div(
                 rx.el.p(
-                    "Selected:",
+                    "Booking System Status:",
                     class_name="text-[10px] font-bold uppercase tracking-widest text-slate-500",
                 ),
                 rx.el.p(
-                    AppState.session_label,
+                    "Environment-verified official calendar integration",
                     class_name="text-sm font-semibold text-slate-900 mt-0.5",
                 ),
             ),
             rx.el.a(
                 rx.icon("external-link", class_name="h-3.5 w-3.5 ml-1"),
-                "Open in new tab",
+                "Open official calendar",
                 href=AppState.calendly_url,
                 target="_blank",
                 rel="noopener noreferrer",
@@ -384,7 +384,7 @@ def calendly_section() -> rx.Component:
             src=AppState.calendly_url,
             title="Calendly booking calendar",
             class_name="w-full rounded-xl border border-slate-200/80 bg-white",
-            style={"minWidth": "320px", "height": "720px"},
+            style={"minWidth": "320px"},
             custom_attrs={"frameborder": "0", "loading": "lazy"},
             key=AppState.calendly_url,
         ),

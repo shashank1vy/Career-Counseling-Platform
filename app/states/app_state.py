@@ -229,20 +229,82 @@ class AppState(rx.State):
 
     @rx.var
     def calendly_url(self) -> str:
-        slugs = {
-            "discovery": "discovery-30min",
-            "deep_dive": "deep-dive-60min",
-            "mock_interview": "mock-interview",
-            "resume_clinic": "resume-clinic",
-        }
-        slug = slugs.get(self.session_type, "discovery-30min")
-        params = (
-            "embed_type=Inline&embed_domain=pathwise.app"
-            "&hide_gdpr_banner=1"
-            "&utm_source=pathwise_app&utm_medium=booking_flow"
-            f"&utm_campaign={self.career_stage}"
+        import os
+        from urllib.parse import (
+            urlparse,
+            urlunparse,
+            parse_qsl,
+            urlencode,
         )
-        return f"https://calendly.com/pathwise-careers/{slug}?{params}"
+
+        DEFAULT_URL = "https://calendly.com/pathwise-careers/discovery-30min"
+
+        # Resolve the configured base URL, validating it is a trusted
+        # calendly.com URL. Fall back safely if anything is off.
+        env_url = os.getenv("CALENDLY_DISCOVERY_URL", "").strip()
+        base_url = DEFAULT_URL
+        if env_url:
+            try:
+                parsed_env = urlparse(env_url)
+                if (
+                    parsed_env.scheme in {"http", "https"}
+                    and parsed_env.netloc
+                    and parsed_env.netloc.lower().endswith("calendly.com")
+                ):
+                    base_url = env_url
+            except Exception:
+                logging.exception(
+                    "Pathwise: failed to parse CALENDLY_DISCOVERY_URL; "
+                    "using default Calendly URL."
+                )
+                base_url = DEFAULT_URL
+
+        # Resolve the campaign tag from current state at runtime.
+        stage_value = (self.career_stage or "").strip()
+        utm_campaign = stage_value if stage_value else "general"
+
+        embed_params: dict[str, str] = {
+            "embed_type": "Inline",
+            "embed_domain": "pathwise.app",
+            "hide_gdpr_banner": "1",
+            "utm_source": "pathwise_app",
+            "utm_medium": "booking_flow",
+            "utm_campaign": utm_campaign,
+        }
+
+        try:
+            parsed = urlparse(base_url)
+            # Re-validate after the env parse in case base_url was tampered.
+            if not (
+                parsed.scheme in {"http", "https"}
+                and parsed.netloc
+                and parsed.netloc.lower().endswith("calendly.com")
+            ):
+                parsed = urlparse(DEFAULT_URL)
+
+            existing_params = dict(
+                parse_qsl(parsed.query, keep_blank_values=False)
+            )
+            # Our embed/UTM values always take precedence so they reflect
+            # the live career stage and embedding configuration.
+            existing_params.update(embed_params)
+            new_query = urlencode(existing_params, doseq=False)
+            return urlunparse(
+                (
+                    parsed.scheme,
+                    parsed.netloc,
+                    parsed.path,
+                    parsed.params,
+                    new_query,
+                    parsed.fragment,
+                )
+            )
+        except Exception:
+            logging.exception(
+                "Pathwise: failed to assemble Calendly URL; using safe fallback."
+            )
+            fallback_query = urlencode(embed_params, doseq=False)
+            return f"{DEFAULT_URL}?{fallback_query}"
 
     @rx.var
     def first_name(self) -> str:
